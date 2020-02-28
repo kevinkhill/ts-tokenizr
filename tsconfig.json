@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build",
+    "target": "es2015",
+    "module": "commonjs",
+    "lib": [
+      "es2017"
+    ],
+    "declaration": true,
+    "declarationMap": true,
+    "strict": true,
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    // "noImplicitAny": true,
+    "noImplicitThis": true
+  },
+  "exclude": [
+    "**/__tests__/**/*",
+    "**/__mocks__/**/*",
+    "**/build/**/*"
+  ]
+}

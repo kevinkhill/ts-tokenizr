@@ -1,0 +1,4 @@
+{
+  "reporter": "spec",
+  "require": "tests/common.js"
+}

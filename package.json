@@ -1,0 +1,46 @@
+{
+  "name": "ts-tokenizr",
+  "version": "2.0.0",
+  "description": "String Tokenization Library for TypeScript",
+  "keywords": [
+    "string",
+    "token",
+    "scanner",
+    "lexer"
+  ],
+  "main": "lib/tokenizr.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rse/tokenizr.git"
+  },
+  "authors": [
+    {
+      "name": "Dr. Ralf S. Engelschall",
+      "email": "rse@engelschall.com",
+      "url": "http://engelschall.com"
+    },
+    {
+      "name": "Kevin Hill",
+      "email": "kevinkhill@gmail.com",
+      "url": "http://github.com/kevinkhill"
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/rse/tokenizr",
+  "bugs": "https://github.com/rse/tokenizr/issues",
+  "devDependencies": {
+    "@babel/cli": "7.8.3",
+    "@babel/core": "7.8.3",
+    "@babel/preset-env": "7.8.3",
+    "chai": "4.2.0",
+    "mocha": "^7.1.0",
+    "typescript": "^3.8.2"
+  },
+  "scripts": {
+    "test": "yarn mocha tests",
+    "pretest": "yarn build",
+    "build": "yarn babel src/tokenizr.js -o lib/tokenizr.js",
+    "build:ts": "yarn tsc",
+    "demo": "babel-node demo/sample.js"
+  }
+}
