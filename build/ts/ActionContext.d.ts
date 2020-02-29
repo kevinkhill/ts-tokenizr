@@ -12,9 +12,9 @@ export declare class ActionContext {
      */
     data(key: string, value: any): any;
     info(): {
-        line: any;
-        column: any;
-        pos: any;
+        line: number;
+        column: number;
+        pos: number;
         len: any;
     };
     push(...args: any[]): this;

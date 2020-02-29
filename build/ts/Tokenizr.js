@@ -2,13 +2,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-param-reassign */
 Object.defineProperty(exports, "__esModule", { value: true });
-const { ActionContext } = require("./ActionContext");
-const { ParsingError } = require("./ParsingError");
-const { Token } = require("./Token");
-const { excerpt } = require("./excerpt");
+//@TODO we can save throwing lots of errors with typing this out
+const ActionContext_1 = require("./ActionContext");
+const excerpt_1 = require("./excerpt");
+const ParsingError_1 = require("./ParsingError");
+const Token_1 = require("./Token");
 /*  external API class  */
 class Tokenizr {
-    /*  construct and initialize the object  */
     constructor() {
         this._before = null;
         this._after = null;
@@ -17,7 +17,9 @@ class Tokenizr {
         this._debug = false;
         this.reset();
     }
-    /*  reset the internal state  */
+    /**
+     * Reset the internal state
+     */
     reset() {
         this._input = "";
         this._len = 0;
@@ -30,25 +32,34 @@ class Tokenizr {
         this._transaction = [];
         this._pending = [];
         this._stopped = false;
-        this._ctx = new ActionContext(this);
+        this._ctx = new ActionContext_1.ActionContext(this);
         return this;
     }
-    /*  create an error message for the current position  */
+    /**
+     * Create an error message for the current position
+     */
     error(message) {
-        return new ParsingError(message, this._pos, this._line, this._column, this._input);
+        return new ParsingError_1.ParsingError(message, this._pos, this._line, this._column, this._input);
     }
-    /*  configure debug operation  */
+    /**
+     * Configure debug operation
+     */
     debug(debug) {
         this._debug = debug;
         return this;
     }
-    /*  output a debug message  */
+    /**
+     * Output a debug message
+     */
+    //@TODO make private
     _log(msg) {
         /* eslint no-console: off */
         if (this._debug)
             console.log(`tokenizr: ${msg}`);
     }
-    /*  provide (new) input string to tokenize  */
+    /**
+     * Provide (new) input string to tokenize
+     */
     input(input) {
         /*  sanity check arguments  */
         if (typeof input !== "string")
@@ -152,7 +163,9 @@ class Tokenizr {
         this._finish = action;
         return this;
     }
-    /*  configure a tokenization rule  */
+    /**
+     * Configure a tokenization rule
+     */
     rule(state, pattern, action, name = "unknown") {
         /*  support optional states  */
         if (arguments.length === 2 && typeof pattern === "function") {
@@ -208,7 +221,9 @@ class Tokenizr {
         this._rules.push({ state, pattern, action, name });
         return this;
     }
-    /*  progress the line/column counter  */
+    /**
+     * Progress the line/column counter
+     */
     _progress(from, until) {
         const line = this._line;
         const column = this._column;
@@ -230,7 +245,9 @@ class Tokenizr {
             `from: <line ${line}, column ${column}>, ` +
             `to: <line ${this._line}, column ${this._column}>`);
     }
-    /*  determine and return the next token  */
+    /**
+     * Determine and return the next token
+     */
     _tokenize() {
         /*  helper function for finishing parsing  */
         const finish = () => {
@@ -238,7 +255,7 @@ class Tokenizr {
                 if (this._finish !== null)
                     this._finish.call(this._ctx, this._ctx);
                 this._eof = true;
-                this._pending.push(new Token("EOF", "", "", this._pos, this._line, this._column));
+                this._pending.push(new Token_1.Token("EOF", "", "", this._pos, this._line, this._column));
             }
         };
         /*  tokenize only as long as we were not stopped and there is input left  */
@@ -252,7 +269,7 @@ class Tokenizr {
             continued = false;
             /*  some optional debugging context  */
             if (this._debug) {
-                const e = excerpt(this._input, this._pos);
+                const e = excerpt_1.excerpt(this._input, this._pos);
                 const tags = Object.keys(this._tag)
                     .map(tag => `#${tag}`)
                     .join(" ");
@@ -348,7 +365,9 @@ class Tokenizr {
         /*  no pattern matched at all  */
         throw this.error("token not recognized");
     }
-    /*  determine and return next token  */
+    /**
+     * Determine and return next token
+     */
     token() {
         /*  if no more tokens are pending, try to determine a new one  */
         if (this._pending.length === 0)
@@ -364,7 +383,9 @@ class Tokenizr {
         /*  no more tokens  */
         return null;
     }
-    /*  determine and return all tokens  */
+    /**
+     * Determine and return all tokens
+     */
     tokens() {
         const result = [];
         let token;
@@ -372,7 +393,18 @@ class Tokenizr {
             result.push(token);
         return result;
     }
-    /*  peek at the next token or token at particular offset  */
+    /**
+     * Determine and generate tokens
+     */
+    // *tokenGenerator() {
+    //   let token;
+    //   while ((token = this.token()) !== null) {
+    //     yield token;
+    //   }
+    // }
+    /**
+     * Peek at the next token or token at particular offset
+     */
     peek(offset) {
         if (typeof offset === "undefined")
             offset = 0;
@@ -383,7 +415,9 @@ class Tokenizr {
         this._log(`PEEK: ${this._pending[offset].toString()}`);
         return this._pending[offset];
     }
-    /*  skip one or more tokens  */
+    /**
+     * Skip one or more tokens
+     */
     skip(len) {
         if (typeof len === "undefined")
             len = 1;
@@ -395,7 +429,9 @@ class Tokenizr {
             this.token();
         return this;
     }
-    /*  consume the current token (by expecting it to be a particular symbol)  */
+    /**
+     * Consume the current token (by expecting it to be a particular symbol)
+     */
     consume(type, value) {
         for (let i = 0; i < this._pending.length + 1; i++)
             this._tokenize();
@@ -404,7 +440,7 @@ class Tokenizr {
         const token = this.token();
         this._log(`CONSUME: ${token.toString()}`);
         const raiseError = () => {
-            throw new ParsingError(`expected: <type: ${type}, value: ${JSON.stringify(value)} (${typeof value})>, ` +
+            throw new ParsingError_1.ParsingError(`expected: <type: ${type}, value: ${JSON.stringify(value)} (${typeof value})>, ` +
                 `found: <type: ${token.type}, value: ${JSON.stringify(token.value)} (${typeof token.value})>`, token.pos, token.line, token.column, this._input);
         };
         if (arguments.length === 2 && !token.isA(type, value))
@@ -413,19 +449,25 @@ class Tokenizr {
             raiseError("*", "any");
         return token;
     }
-    /*  open tokenization transaction  */
+    /**
+     * Open tokenization transaction
+     */
     begin() {
         this._log(`BEGIN: level ${this._transaction.length}`);
         this._transaction.unshift([]);
         return this;
     }
-    /*  determine depth of still open tokenization transaction  */
+    /**
+     * Determine depth of still open tokenization transaction
+     */
     depth() {
         if (this._transaction.length === 0)
             throw new Error("cannot determine depth -- no active transaction");
         return this._transaction[0].length;
     }
-    /*  close (successfully) tokenization transaction  */
+    /**
+     * Close (successfully) tokenization transaction
+     */
     commit() {
         if (this._transaction.length === 0)
             throw new Error("cannot commit transaction -- no active transaction");
@@ -433,7 +475,9 @@ class Tokenizr {
         this._log(`COMMIT: level ${this._transaction.length}`);
         return this;
     }
-    /*  close (unsuccessfully) tokenization transaction  */
+    /**
+     * Close (unsuccessfully) tokenization transaction
+     */
     rollback() {
         if (this._transaction.length === 0)
             throw new Error("cannot rollback transaction -- no active transaction");
@@ -442,7 +486,9 @@ class Tokenizr {
         this._log(`ROLLBACK: level ${this._transaction.length}`);
         return this;
     }
-    /*  execute multiple alternative callbacks  */
+    /**
+     * Execute multiple alternative callbacks
+     */
     alternatives(...alternatives) {
         let result = null;
         let depths = [];

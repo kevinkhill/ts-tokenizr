@@ -1,63 +1,14 @@
-/* global describe: false */
-/* global it: false */
-/* global expect: false */
+const { createTokenizer } = require("./setup");
 
-const Tokenizr = require("../build");
+const tokenizr = createTokenizer();
 
-console.log(Tokenizr);
-
-describe("ts-tokenizr library", function() {
-  it("should expose its official API", function() {
-    const tokenizr = new Tokenizr();
-
-    expect(tokenizr).to.be.a("object");
-    expect(tokenizr).to.respondTo("input");
-    expect(tokenizr).to.respondTo("rule");
-    expect(tokenizr).to.respondTo("token");
+describe("ts-tokenizr library", () => {
+  test("should expose its official API", () => {
+    expect(tokenizr.token).toBeInstanceOf(Function);
+    expect(tokenizr.tokens).toBeInstanceOf(Function);
   });
 
-  it("should have the expected functionality", function() {
-    const tokenizr = new Tokenizr();
-
-    tokenizr.rule("default", /[a-zA-Z]+/, function(ctx /*, m */) {
-      ctx.accept("symbol");
-    });
-
-    tokenizr.rule("default", /[0-9]+/, function(ctx, m) {
-      ctx.accept("number", parseInt(m[0]));
-    });
-
-    tokenizr.rule("default", /"((?:\\"|[^\r\n]+)+)"/, function(ctx, m) {
-      ctx.accept("string", m[1].replace(/\\"/g, '"'));
-    });
-
-    tokenizr.rule("default", /\/\*/, function(ctx /*, m */) {
-      ctx.push("comment");
-      ctx.tag("bar");
-      ctx.ignore();
-    });
-
-    tokenizr.rule("comment #foo #bar", /\*\//, function(/* ctx, m */) {
-      throw new Error("should never enter");
-    });
-
-    tokenizr.rule("comment #bar", /\*\//, function(ctx /*, m */) {
-      ctx.untag("bar");
-      ctx.pop();
-      ctx.ignore();
-    });
-
-    tokenizr.rule("comment #bar", /./, function(ctx /*, m */) {
-      ctx.ignore();
-    });
-
-    tokenizr.rule("default", /\s*,\s*/, function(ctx /*, m */) {
-      ctx.ignore();
-    });
-
-    tokenizr.input('foo42,\n "bar baz",\n quux/* */');
-    tokenizr.debug(true);
-
+  test("should have the expected functionality", () => {
     let tokens;
 
     try {
@@ -67,11 +18,9 @@ describe("ts-tokenizr library", function() {
       throw ex;
     }
 
-    expect(tokens).to.be.a("array");
-    expect(tokens).to.have.length(5);
-    expect(tokens[0])
-      .to.be.a("object")
-      .and.to.be.deep.equal({
+    expect(tokens).toBeInstanceOf(Array);
+    expect(tokens).toHaveLength(5);
+    expect(tokens[0]).toEqual({
         type: "symbol",
         value: "foo",
         text: "foo",
@@ -79,9 +28,8 @@ describe("ts-tokenizr library", function() {
         line: 1,
         column: 1
       });
-    expect(tokens[1])
-      .to.be.a("object")
-      .and.to.be.deep.equal({
+
+    expect(tokens[1]).toEqual({
         type: "number",
         value: 42,
         text: "42",
@@ -89,9 +37,8 @@ describe("ts-tokenizr library", function() {
         line: 1,
         column: 4
       });
-    expect(tokens[2])
-      .to.be.a("object")
-      .and.to.be.deep.equal({
+
+    expect(tokens[2]).toEqual({
         type: "string",
         value: "bar baz",
         text: '"bar baz"',
@@ -99,9 +46,8 @@ describe("ts-tokenizr library", function() {
         line: 2,
         column: 2
       });
-    expect(tokens[3])
-      .to.be.a("object")
-      .and.to.be.deep.equal({
+
+    expect(tokens[3]).toEqual({
         type: "symbol",
         value: "quux",
         text: "quux",

@@ -28,7 +28,6 @@ export class Tokenizr {
   _stopped: boolean;
   _ctx: ActionContext;
 
-  /*  construct and initialize the object  */
   constructor() {
     this._before = null;
     this._after = null;
@@ -37,8 +36,11 @@ export class Tokenizr {
     this._debug = false;
     this.reset();
   }
-  /*  reset the internal state  */
-  reset() {
+
+  /**
+   * Reset the internal state
+   */
+  reset(): this {
     this._input = "";
     this._len = 0;
     this._eof = false;
@@ -51,6 +53,7 @@ export class Tokenizr {
     this._pending = [];
     this._stopped = false;
     this._ctx = new ActionContext(this);
+
     return this;
   }
 
@@ -208,7 +211,7 @@ export class Tokenizr {
   /**
    * Configure a tokenization rule
    */
-  rule(state: RegExp, pattern, action, name = "unknown") {
+  rule(state, pattern, action, name = "unknown") {
     /*  support optional states  */
     if (arguments.length === 2 && typeof pattern === "function") {
       [pattern, action] = [state, pattern];
@@ -269,7 +272,7 @@ export class Tokenizr {
   /**
    * Progress the line/column counter
    */
-  _progress(from, until) {
+  private _progress(from, until) {
     const line = this._line;
     const column = this._column;
     const s = this._input;
@@ -292,8 +295,7 @@ export class Tokenizr {
   /**
    * Determine and return the next token
    */
-  //@TODO make private
-  _tokenize() {
+  private _tokenize() {
     /*  helper function for finishing parsing  */
     const finish = () => {
       if (!this._eof) {
@@ -426,57 +428,103 @@ export class Tokenizr {
     /*  no pattern matched at all  */
     throw this.error("token not recognized");
   }
-  /*  determine and return next token  */
-  token() {
+
+  /**
+   * Determine and return next token
+   */
+  token(): Token {
     /*  if no more tokens are pending, try to determine a new one  */
     if (this._pending.length === 0) this._tokenize();
+
     /*  return now potentially pending token  */
     if (this._pending.length > 0) {
       const token = this._pending.shift();
+
       if (this._transaction.length > 0)
         this._transaction[0].push(token);
+
       this._log(`TOKEN: ${token.toString()}`);
+
       return token;
     }
+
     /*  no more tokens  */
     return null;
   }
-  /*  determine and return all tokens  */
-  tokens() {
-    const result = [];
+
+  /**
+   * Determine and return all tokens
+   */
+  tokens(): Array<Token> {
+    const result: Array<Token> = [];
+
     let token;
+
     while ((token = this.token()) !== null) result.push(token);
+
     return result;
   }
-  /*  peek at the next token or token at particular offset  */
-  peek(offset) {
+
+  /**
+   * Determine and generate tokens
+   */
+  // *tokenGenerator() {
+  //   let token;
+
+  //   while ((token = this.token()) !== null) {
+  //     yield token;
+  //   }
+  // }
+
+  /**
+   * Peek at the next token or token at particular offset
+   */
+  peek(offset: number) {
     if (typeof offset === "undefined") offset = 0;
+
     for (let i = 0; i < this._pending.length + offset; i++)
       this._tokenize();
+
     if (offset >= this._pending.length)
       throw new Error("not enough tokens available for peek operation");
+
     this._log(`PEEK: ${this._pending[offset].toString()}`);
+
     return this._pending[offset];
   }
-  /*  skip one or more tokens  */
-  skip(len) {
+
+  /**
+   * Skip one or more tokens
+   */
+  skip(len: number): this {
     if (typeof len === "undefined") len = 1;
+
     for (let i = 0; i < this._pending.length + len; i++)
       this._tokenize();
+
     if (len > this._pending.length)
       throw new Error("not enough tokens available for skip operation");
+
     while (len-- > 0) this.token();
+
     return this;
   }
-  /*  consume the current token (by expecting it to be a particular symbol)  */
+
+  /**
+   * Consume the current token (by expecting it to be a particular symbol)
+   */
   consume(type, value) {
     for (let i = 0; i < this._pending.length + 1; i++) this._tokenize();
+
     if (this._pending.length === 0)
       throw new Error(
         "not enough tokens available for consume operation"
       );
+
     const token = this.token();
+
     this._log(`CONSUME: ${token.toString()}`);
+
     const raiseError = () => {
       throw new ParsingError(
         `expected: <type: ${type}, value: ${JSON.stringify(
@@ -491,50 +539,78 @@ export class Tokenizr {
         this._input
       );
     };
+
     if (arguments.length === 2 && !token.isA(type, value))
       raiseError(JSON.stringify(value), typeof value);
     else if (!token.isA(type)) raiseError("*", "any");
+
     return token;
   }
-  /*  open tokenization transaction  */
-  begin() {
+
+  /**
+   * Open tokenization transaction
+   */
+  begin(): this {
     this._log(`BEGIN: level ${this._transaction.length}`);
+
     this._transaction.unshift([]);
+
     return this;
   }
-  /*  determine depth of still open tokenization transaction  */
-  depth() {
+
+  /**
+   * Determine depth of still open tokenization transaction
+   */
+  depth(): number {
     if (this._transaction.length === 0)
       throw new Error(
         "cannot determine depth -- no active transaction"
       );
+
     return this._transaction[0].length;
   }
-  /*  close (successfully) tokenization transaction  */
-  commit() {
+
+  /**
+   * Close (successfully) tokenization transaction
+   */
+  commit(): this {
     if (this._transaction.length === 0)
       throw new Error(
         "cannot commit transaction -- no active transaction"
       );
+
     this._transaction.shift();
+
     this._log(`COMMIT: level ${this._transaction.length}`);
+
     return this;
   }
-  /*  close (unsuccessfully) tokenization transaction  */
-  rollback() {
+
+  /**
+   * Close (unsuccessfully) tokenization transaction
+   */
+  rollback(): this {
     if (this._transaction.length === 0)
       throw new Error(
         "cannot rollback transaction -- no active transaction"
       );
+
     this._pending = this._transaction[0].concat(this._pending);
+
     this._transaction.shift();
+
     this._log(`ROLLBACK: level ${this._transaction.length}`);
+
     return this;
   }
-  /*  execute multiple alternative callbacks  */
+
+  /**
+   * Execute multiple alternative callbacks
+   */
   alternatives(...alternatives) {
     let result = null;
     let depths = [];
+
     for (let i = 0; i < alternatives.length; i++) {
       try {
         this.begin();
@@ -548,10 +624,12 @@ export class Tokenizr {
         continue;
       }
     }
+
     if (result === null && depths.length > 0) {
       depths = depths.sort((a, b) => a.depth - b.depth);
       throw depths[0].ex;
     }
+
     return result;
   }
 }

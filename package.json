@@ -37,10 +37,9 @@
     "typescript": "^3.8.2"
   },
   "scripts": {
-    "test": "yarn mocha tests",
-    "pretest": "yarn build",
-    "build": "yarn babel src/tokenizr.js -o lib/tokenizr.js",
-    "build:ts": "yarn tsc",
-    "demo": "babel-node demo/sample.js"
+    "demo": "babel-node demo/sample.js",
+    "test": "yarn tsc >/dev/null 2>&1; yarn jest",
+    "test:js": "yarn build && mocha tests",
+    "build": "yarn babel src/tokenizr.js -o lib/tokenizr.js"
   }
 }
