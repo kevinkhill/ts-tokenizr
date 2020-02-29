@@ -2,9 +2,9 @@
 /* global it: false */
 /* global expect: false */
 
-const Tokenizr = require("../build");
+const Tokenizr = require("../../lib/tokenizr.js");
 
-describe("ts-tokenizr library", function() {
+describe("Tokenizr Library", function() {
   it("should expose its official API", function() {
     const tokenizr = new Tokenizr();
 

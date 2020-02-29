@@ -1,13 +1,33 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-param-reassign */
 
-const { ActionContext } = require("./ActionContext");
-const { ParsingError } = require("./ParsingError");
-const { Token } = require("./Token");
-const { excerpt } = require("./excerpt");
+//@TODO we can save throwing lots of errors with typing this out
+
+import { ActionContext } from "./ActionContext";
+import { excerpt } from "./excerpt";
+import { ParsingError } from "./ParsingError";
+import { Token } from "./Token";
 
 /*  external API class  */
 export class Tokenizr {
+  _before: null;
+  _after: null;
+  _finish: null;
+  _rules: Array<never>;
+  _debug: boolean;
+  _input: string;
+  _len: number;
+  _eof: boolean;
+  _pos: number;
+  _line: number;
+  _column: number;
+  _state: Array<string>;
+  _tag: {};
+  _transaction: Array<never>;
+  _pending: Array<never>;
+  _stopped: boolean;
+  _ctx: ActionContext;
+
   /*  construct and initialize the object  */
   constructor() {
     this._before = null;
@@ -33,8 +53,11 @@ export class Tokenizr {
     this._ctx = new ActionContext(this);
     return this;
   }
-  /*  create an error message for the current position  */
-  error(message) {
+
+  /**
+   * Create an error message for the current position
+   */
+  error(message: string): ParsingError {
     return new ParsingError(
       message,
       this._pos,
@@ -43,18 +66,28 @@ export class Tokenizr {
       this._input
     );
   }
-  /*  configure debug operation  */
-  debug(debug) {
+
+  /**
+   * Configure debug operation
+   */
+  debug(debug: boolean): this {
     this._debug = debug;
     return this;
   }
-  /*  output a debug message  */
-  _log(msg) {
+
+  /**
+   * Output a debug message
+   */
+  //@TODO make private
+  _log(msg: string) {
     /* eslint no-console: off */
     if (this._debug) console.log(`tokenizr: ${msg}`);
   }
-  /*  provide (new) input string to tokenize  */
-  input(input) {
+
+  /**
+   * Provide (new) input string to tokenize
+   */
+  input(input: string) {
     /*  sanity check arguments  */
     if (typeof input !== "string")
       throw new Error('parameter "input" not a String');
@@ -64,6 +97,7 @@ export class Tokenizr {
     this._len = input.length;
     return this;
   }
+
   /*  push state  */
   push(state) {
     /*  sanity check arguments  */
@@ -80,6 +114,7 @@ export class Tokenizr {
     this._state.push(state);
     return this;
   }
+
   /*  pop state  */
   pop() {
     /*  sanity check arguments  */
@@ -95,6 +130,7 @@ export class Tokenizr {
     );
     return this._state.pop();
   }
+
   /*  get/set state  */
   state(state) {
     if (arguments.length === 1) {
@@ -113,6 +149,7 @@ export class Tokenizr {
       return this._state[this._state.length - 1];
     throw new Error("invalid number of arguments");
   }
+
   /*  set a tag  */
   tag(tag) {
     /*  sanity check arguments  */
@@ -125,6 +162,7 @@ export class Tokenizr {
     this._tag[tag] = true;
     return this;
   }
+
   /*  check whether tag is set  */
   tagged(tag) {
     /*  sanity check arguments  */
@@ -135,6 +173,7 @@ export class Tokenizr {
     /*  set tag  */
     return this._tag[tag] === true;
   }
+
   /*  unset a tag  */
   untag(tag) {
     /*  sanity check arguments  */
@@ -147,23 +186,29 @@ export class Tokenizr {
     delete this._tag[tag];
     return this;
   }
+
   /*  configure a tokenization before-rule callback  */
   before(action) {
     this._before = action;
     return this;
   }
+
   /*  configure a tokenization after-rule callback  */
   after(action) {
     this._after = action;
     return this;
   }
+
   /*  configure a tokenization finish callback  */
   finish(action) {
     this._finish = action;
     return this;
   }
-  /*  configure a tokenization rule  */
-  rule(state, pattern, action, name = "unknown") {
+
+  /**
+   * Configure a tokenization rule
+   */
+  rule(state: RegExp, pattern, action, name = "unknown") {
     /*  support optional states  */
     if (arguments.length === 2 && typeof pattern === "function") {
       [pattern, action] = [state, pattern];
@@ -220,7 +265,10 @@ export class Tokenizr {
     this._rules.push({ state, pattern, action, name });
     return this;
   }
-  /*  progress the line/column counter  */
+
+  /**
+   * Progress the line/column counter
+   */
   _progress(from, until) {
     const line = this._line;
     const column = this._column;
@@ -240,7 +288,11 @@ export class Tokenizr {
         `to: <line ${this._line}, column ${this._column}>`
     );
   }
-  /*  determine and return the next token  */
+
+  /**
+   * Determine and return the next token
+   */
+  //@TODO make private
   _tokenize() {
     /*  helper function for finishing parsing  */
     const finish = () => {
