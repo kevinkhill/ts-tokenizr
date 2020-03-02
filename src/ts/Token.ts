@@ -1,10 +1,21 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-/**
- * internal helper class for token representation
- */
 export class Token {
-  constructor(type, value, text, pos = 0, line = 0, column = 0) {
+  type: string;
+  value: unknown;
+  text: string;
+  pos: number;
+  line: number;
+  column: number;
+
+  constructor(
+    type: string,
+    value: unknown,
+    text: string,
+    pos = 0,
+    line = 0,
+    column = 0
+  ) {
     this.type = type;
     this.value = value;
     this.text = text;
@@ -12,7 +23,8 @@ export class Token {
     this.line = line;
     this.column = column;
   }
-  toString() {
+
+  toString(): string {
     return [
       `<type: ${this.type}, `,
       `value: ${JSON.stringify(this.value)}, `,
@@ -22,9 +34,16 @@ export class Token {
       `column: ${this.column}>`
     ].join();
   }
-  isA(type, value) {
-    if (type !== this.type) return false;
-    if (arguments.length === 2 && value !== this.value) return false;
+
+  isA(type: string, value?: unknown): boolean {
+    if (type !== this.type) {
+      return false;
+    }
+
+    if (value && value !== this.value) {
+      return false;
+    }
+
     return true;
   }
 }

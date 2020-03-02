@@ -5,33 +5,30 @@ import { Tokenizr } from "./Tokenizr";
 
 export class ActionContext {
   _tokenizr: Tokenizr;
-  _data: {};
-  _repeat: boolean;
-  _reject: boolean;
-  _ignore: boolean;
-  _match: null;
+  _repeat = false;
+  _reject = false;
+  _ignore = false;
+  _data: Record<string, unknown> = {};
+  _match: RegExpExecArray | null = null;
 
   constructor(tokenizr: Tokenizr) {
     this._tokenizr = tokenizr;
-    this._data = {};
-    this._repeat = false;
-    this._reject = false;
-    this._ignore = false;
-    this._match = null;
   }
 
   /**
    * Store and retrieve user data attached to context
    */
-  data(key: string, value) {
-    const valueOld = this._data[key];
+  data(key: string, value?: unknown): unknown | void {
+    if (!value) {
+      return this._data[key];
+    }
 
-    if (arguments.length === 2) this._data[key] = value;
-
-    return valueOld;
+    this._data[key] = value;
   }
 
-  /*  retrieve information of current matching  */
+  /**
+   * Retrieve information of current matching
+   */
   info() {
     return {
       line: this._tokenizr._line,
@@ -40,9 +37,13 @@ export class ActionContext {
       len: this._match[0].length
     };
   }
-  /*  pass-through functions to attached tokenizer  */
-  push(...args) {
+
+  /**
+   * Pass-through functions to attached tokenizer
+   */
+  push(...args): this {
     this._tokenizr.push(...args);
+
     return this;
   }
 
@@ -55,6 +56,7 @@ export class ActionContext {
       this._tokenizr.state(...args);
       return this;
     }
+
     return this._tokenizr.state(...args);
   }
 
@@ -67,41 +69,58 @@ export class ActionContext {
     return this._tokenizr.tagged(...args);
   }
 
-  untag(...args) {
+  untag(...args): this {
     this._tokenizr.untag(...args);
+
     return this;
   }
 
-  /*  mark current matching to be repeated from scratch  */
-  repeat() {
+  /**
+   * Mark current matching to be repeated from scratch
+   */
+  repeat(): this {
     this._tokenizr._log("    REPEAT");
     this._repeat = true;
+
     return this;
   }
 
-  /*  mark current matching to be rejected  */
-  reject() {
+  /**
+   * Mark current matching to be rejected
+   */
+  reject(): this {
     this._tokenizr._log("    REJECT");
     this._reject = true;
+
     return this;
   }
 
-  /*  mark current matching to be ignored  */
-  ignore() {
+  /**
+   * Mark current matching to be ignored
+   */
+  ignore(): this {
     this._tokenizr._log("    IGNORE");
     this._ignore = true;
+
     return this;
   }
 
-  /*  accept current matching as a new token  */
-  accept(type, value) {
-    if (arguments.length < 2) value = this._match[0];
+  /**
+   * Accept current matching as a new token
+   */
+  accept(type: string, value?: never): this {
+    if (arguments.length < 2) {
+      // eslint-disable-next-line no-param-reassign
+      value = this._match[0];
+    }
+
     this._tokenizr._log(
       `    ACCEPT: type: ${type}, value: ` +
         `${JSON.stringify(value)} (${typeof value}), text: "${
           this._match[0]
         }"`
     );
+
     this._tokenizr._pending.push(
       new Token(
         type,
@@ -112,11 +131,16 @@ export class ActionContext {
         this._tokenizr._column
       )
     );
+
     return this;
   }
-  /*  immediately stop tokenization  */
-  stop() {
+
+  /**
+   * Immediately stop tokenization
+   */
+  stop(): this {
     this._tokenizr._stopped = true;
+
     return this;
   }
 }

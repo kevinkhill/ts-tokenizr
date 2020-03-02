@@ -1,10 +1,22 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { excerpt } from "./excerpt";
+import { excerpt } from "./lib/excerpt";
 
 export class ParsingError extends Error {
-  constructor(message, pos, line, column, input) {
+  pos: number;
+  line: number;
+  column: number;
+  input: string;
+
+  constructor(
+    message: string,
+    pos: number,
+    line: number,
+    column: number,
+    input: string
+  ) {
     super(message);
+
     this.name = "ParsingError";
     this.message = message;
     this.pos = pos;
@@ -19,9 +31,12 @@ export class ParsingError extends Error {
   toString() {
     const l = excerpt(this.input, this.pos);
     const prefix1 = `line ${this.line} (column ${this.column}): `;
+
     let prefix2 = "";
+
     for (let i = 0; i < prefix1.length + l.prologText.length; i++)
       prefix2 += " ";
+
     const msg =
       "Parsing Error: " +
       this.message +
@@ -33,6 +48,7 @@ export class ParsingError extends Error {
       "\n" +
       prefix2 +
       "^";
+
     return msg;
   }
 }
