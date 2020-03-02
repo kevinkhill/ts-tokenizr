@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
-import { excerpt } from "./lib/excerpt";
+import { excerpt } from "./excerpt";
 
 export class ParsingError extends Error {
   pos: number;
@@ -28,7 +26,7 @@ export class ParsingError extends Error {
   /**
    * Render a useful string representation
    */
-  toString() {
+  toString(): string {
     const l = excerpt(this.input, this.pos);
     const prefix1 = `line ${this.line} (column ${this.column}): `;
 

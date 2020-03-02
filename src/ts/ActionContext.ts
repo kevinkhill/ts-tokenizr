@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { Token } from "./Token";
 import { Tokenizr } from "./Tokenizr";
 
@@ -29,7 +27,7 @@ export class ActionContext {
   /**
    * Retrieve information of current matching
    */
-  info() {
+  info(): Record<string, number> {
     return {
       line: this._tokenizr._line,
       column: this._tokenizr._column,

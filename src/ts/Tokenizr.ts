@@ -1,11 +1,22 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-param-reassign */
 
 import { ActionContext } from "./ActionContext";
-import { excerpt } from "./lib/excerpt";
+import { excerpt } from "./excerpt";
 import { ParsingError } from "./ParsingError";
 import { Token } from "./Token";
-import { Action, DepthError, Rule, TokenizrConfig } from "./types";
+import {
+  Action,
+  DepthError,
+  Rule,
+  TaggedState,
+  Tags,
+  TokenizrConfig
+} from "./types";
+import {
+  postProcessPattern,
+  postProcessState,
+  processTags
+} from "./util";
 
 export class Tokenizr {
   static readonly defaults = {
@@ -27,7 +38,7 @@ export class Tokenizr {
   _after: Action | null = null;
   _before: Action | null = null;
   _finish: Action | null = null;
-  _tag: Record<string, boolean> = {};
+  _tag: Tags = {};
   _state: Array<string> = ["default"];
   _transaction: Array<Array<Token>> = [];
 
@@ -99,7 +110,7 @@ export class Tokenizr {
   /**
    * Push state
    */
-  push(state: string) {
+  push(state: string): this {
     this._state.push(state);
 
     this._log(
@@ -114,9 +125,10 @@ export class Tokenizr {
   /**
    * Pop state
    */
-  pop(): string | undefined {
-    if (this._state.length < 2)
+  pop(): this | void {
+    if (this._state.length < 2) {
       throw new Error("no more custom states to pop");
+    }
 
     /*  pop old state  */
     this._log(
@@ -125,19 +137,18 @@ export class Tokenizr {
         `new: <${this._state[this._state.length - 2]}>`
     );
 
-    return this._state.pop();
+    this._state.pop();
+
+    return this;
   }
 
   /**
    * get/set state
    */
-  state(state: string) {
-    if (arguments.length === 1) {
-      /*  sanity check arguments  */
-      if (typeof state !== "string")
-        throw new Error('parameter "state" not a String');
-
-      /*  change current state  */
+  state(): string;
+  state(state: string): this;
+  state(state?: string): this | string {
+    if (typeof state === "string") {
       this._log(
         "    STATE (SET): " +
           `old: <${this._state[this._state.length - 1]}>, ` +
@@ -147,60 +158,33 @@ export class Tokenizr {
       this._state[this._state.length - 1] = state;
 
       return this;
-    } else if (arguments.length === 0) {
-      return this._state[this._state.length - 1];
     }
 
-    throw new Error("invalid number of arguments");
+    return this._state[this._state.length - 1];
   }
 
   /**
    * Set a tag
    */
-  tag(tag: string) {
-    /*  sanity check arguments  */
-    if (arguments.length !== 1)
-      throw new Error("invalid number of arguments");
-    if (typeof tag !== "string")
-      throw new Error('parameter "tag" not a String');
-
-    /*  set tag  */
-    this._log(`    TAG (ADD): ${tag}`);
-
+  tag(tag: string): this {
     this._tag[tag] = true;
-
+    this._log(`    TAG (ADD): ${tag}`);
     return this;
   }
 
   /**
    * Check whether tag is set
    */
-  tagged(tag: string) {
-    /*  sanity check arguments  */
-    if (arguments.length !== 1)
-      throw new Error("invalid number of arguments");
-    if (typeof tag !== "string")
-      throw new Error('parameter "tag" not a String');
-    /*  set tag  */
+  tagged(tag: string): boolean {
     return this._tag[tag] === true;
   }
 
   /**
    * Unset a tag
    */
-  untag(tag: string) {
-    /*  sanity check arguments  */
-    if (arguments.length !== 1)
-      throw new Error("invalid number of arguments");
-
-    if (typeof tag !== "string")
-      throw new Error('parameter "tag" not a String');
-
-    /*  delete tag  */
-    this._log(`    TAG (DEL): ${tag}`);
-
+  untag(tag: string): this {
     delete this._tag[tag];
-
+    this._log(`    TAG (DEL): ${tag}`);
     return this;
   }
 
@@ -231,100 +215,41 @@ export class Tokenizr {
   /**
    * Configure a tokenization rule
    */
-  rule(state: any, pattern: any, action: any, name = "unknown") {
-    /*  support optional states  */
-    if (arguments.length === 2 && typeof pattern === "function") {
-      [pattern, action] = [state, pattern];
-      state = "*";
-    } else if (
-      arguments.length === 3 &&
-      typeof pattern === "function"
-    ) {
-      [pattern, action, name] = [state, pattern, action];
-      state = "*";
-    }
-
-    /*  sanity check arguments  */
-    if (typeof state !== "string")
-      throw new Error('parameter "state" not a String');
-    if (!(typeof pattern === "object" && pattern instanceof RegExp))
-      throw new Error('parameter "pattern" not a RegExp');
-    if (typeof action !== "function")
-      throw new Error('parameter "action" not a Function');
-    if (typeof name !== "string")
-      throw new Error('parameter "name" not a String');
-
-    /*  post-process state  */
-    state = state.split(/\s*,\s*/g).map(entry => {
-      const items = entry.split(/\s+/g);
-      const states = items.filter(item => !item.startsWith("#"));
-      const tags = items
-        .filter(item => item.startsWith("#"))
-        .map(tag => tag.replace(/^#/, ""));
-      if (states.length !== 1)
-        throw new Error("exactly one state required");
-      return { state: states[0], tags };
+  stateRule(
+    state: string,
+    pattern: RegExp,
+    action: Function,
+    name = "unknown"
+  ): this {
+    this._rules.push({
+      state: postProcessState(state),
+      pattern: postProcessPattern(pattern),
+      action,
+      name
     });
 
-    /*  post-process pattern  */
-    let flags = "g"; /* ECMAScript <= 5 */
-    try {
-      const regexp = new RegExp("", "y");
-      if (typeof regexp.sticky === "boolean")
-        flags = "y"; /* ECMAScript >= 2015 */
-    } catch (ex) {
-      /*  no-op  */
-    }
-
-    if (typeof pattern.multiline === "boolean" && pattern.multiline)
-      flags += "m";
-    if (typeof pattern.dotAll === "boolean" && pattern.dotAll)
-      flags += "s";
-    if (typeof pattern.ignoreCase === "boolean" && pattern.ignoreCase)
-      flags += "i";
-    if (typeof pattern.unicode === "boolean" && pattern.unicode)
-      flags += "u";
-
-    pattern = new RegExp(pattern.source, flags);
-
-    /*  store rule  */
     this._log(
       `rule: configure rule (state: ${state}, pattern: ${pattern.source})`
     );
 
-    this._rules.push({ state, pattern, action, name });
-
     return this;
   }
 
-  /**
-   * Progress the line/column counter
-   */
-  private _progress(from: number, until: number): void {
-    const line = this._line;
-    const column = this._column;
-    const s = this._input;
+  rule(pattern: RegExp, action: Function, name = "unknown"): this {
+    const state = { state: "*", tags: [] };
 
-    for (let i = from; i < until; i++) {
-      const c = s.charAt(i);
-
-      if (c === "\r") {
-        this._column = 1;
-      } else if (c === "\n") {
-        this._line++;
-        this._column = 1;
-      } else if (c === "\t") {
-        this._column += 8 - (this._column % 8);
-      } else {
-        this._column++;
-      }
-    }
+    this._rules.push({
+      state: { state: "*", tags: [] },
+      pattern: postProcessPattern(pattern),
+      action,
+      name
+    });
 
     this._log(
-      `    PROGRESS: characters: ${until - from}, ` +
-        `from: <line ${line}, column ${column}>, ` +
-        `to: <line ${this._line}, column ${this._column}>`
+      `rule: configure rule (state: ${state}, pattern: ${pattern.source})`
     );
+
+    return this;
   }
 
   /**
@@ -382,7 +307,7 @@ export class Tokenizr {
   /**
    * Peek at the next token or token at particular offset
    */
-  peek(offset = 0) {
+  peek(offset = 0): Token {
     for (let i = 0; i < this._pending.length + offset; i++) {
       this._tokenize();
     }
@@ -418,7 +343,7 @@ export class Tokenizr {
   /**
    * Consume the current token (by expecting it to be a particular symbol)
    */
-  consume(type: string, value?: unknown) {
+  consume(type: string, value?: unknown): Token {
     for (let i = 0; i < this._pending.length + 1; i++) {
       this._tokenize();
     }
@@ -436,7 +361,7 @@ export class Tokenizr {
     const raiseError = (
       expectedValue: unknown,
       expectedType: string
-    ) => {
+    ): void => {
       throw new ParsingError(
         `expected: <type: ${type}, value: ${JSON.stringify(
           expectedValue
@@ -523,7 +448,7 @@ export class Tokenizr {
   /**
    * Execute multiple alternative callbacks
    */
-  alternatives(...alternatives: Array<() => never>) {
+  alternatives(...alternatives: Array<() => never>): any {
     let result = null;
     let depths: Array<DepthError> = [];
 
@@ -553,7 +478,7 @@ export class Tokenizr {
   /**
    * Output a debug message
    */
-  _log(msg: string) {
+  _log(msg: string): void {
     if (this.config.debug) {
       /* eslint no-console: off */
       console.log(`tokenizr: ${msg}`);
@@ -565,7 +490,7 @@ export class Tokenizr {
    */
   _tokenize(): void {
     /*  helper function for finishing parsing  */
-    const finish = () => {
+    const finish = (): void => {
       if (!this._eof) {
         if (this._finish !== null) {
           this._finish.call(this._ctx, this._ctx);
@@ -630,6 +555,7 @@ export class Tokenizr {
         }
 
         /*  one of rule's states (and all of its tags) has to match  */
+        //@TODO state is still not working right...
         let matches = false;
         const states = this._rules[i].state.map(item => item.state);
         let idx = states.indexOf("*");
@@ -732,5 +658,35 @@ export class Tokenizr {
 
     /*  no pattern matched at all  */
     throw this.error("token not recognized");
+  }
+
+  /**
+   * Progress the line/column counter
+   */
+  private _progress(from: number, until: number): void {
+    const line = this._line;
+    const column = this._column;
+    const s = this._input;
+
+    for (let i = from; i < until; i++) {
+      const c = s.charAt(i);
+
+      if (c === "\r") {
+        this._column = 1;
+      } else if (c === "\n") {
+        this._line++;
+        this._column = 1;
+      } else if (c === "\t") {
+        this._column += 8 - (this._column % 8);
+      } else {
+        this._column++;
+      }
+    }
+
+    this._log(
+      `    PROGRESS: characters: ${until - from}, ` +
+        `from: <line ${line}, column ${column}>, ` +
+        `to: <line ${this._line}, column ${this._column}>`
+    );
   }
 }
