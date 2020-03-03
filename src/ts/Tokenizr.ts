@@ -3,21 +3,16 @@
 import { ActionContext } from "./ActionContext";
 import { excerpt } from "./excerpt";
 import { ParsingError } from "./ParsingError";
-import { State } from "./State";
+import { defaultRule, stateRule } from "./rules";
 import { Token } from "./Token";
 import {
   Action,
   DepthError,
   Rule,
-  TaggedState,
   Tags,
   TokenizrConfig
 } from "./types";
-import {
-  postProcessPattern,
-  postProcessState,
-  processTags
-} from "./util";
+import { stringifyTags } from "./util";
 
 export class Tokenizr {
   static readonly defaults = {
@@ -34,7 +29,7 @@ export class Tokenizr {
   _eof = false;
   _stopped = false;
   _ctx: ActionContext;
-  _rules: Array<Rule> = [];
+  _rules: Array<StateRule> = [];
   _pending: Array<Token> = [];
   _after: Action | null = null;
   _before: Action | null = null;
@@ -214,32 +209,32 @@ export class Tokenizr {
   }
 
   /**
-   * Configure a stateful tokenization rule
+   * Configure a tokenization rule
+   *
+   * @todo Figure this out!s
    */
-  stateRule(
+  rule(state: RegExp, pattern: Action, action: string): this;
+  rule(
     state: string,
     pattern: RegExp,
-    action: Function,
+    action: Action,
+    name: string
+  ): this;
+  rule(
+    state: string | RegExp,
+    pattern: RegExp | Action,
+    action: Action | string,
     name = "unknown"
   ): this {
-    return this.pushRule({
-      state: postProcessState(state),
-      pattern: postProcessPattern(pattern),
-      action,
-      name
-    });
-  }
+    let rule: Rule;
 
-  /**
-   * Configure a tokenization rule
-   */
-  rule(pattern: RegExp, action: Function, name = "unknown"): this {
-    return this.pushRule({
-      state: { state: "*", tags: [] },
-      pattern: postProcessPattern(pattern),
-      action,
-      name
-    });
+    if (typeof state === "string") {
+      rule = stateRule(state, pattern, action, name);
+    } else {
+      rule = defaultRule(state, pattern, action);
+    }
+
+    return this._pushRule(rule);
   }
 
   /**
@@ -449,9 +444,10 @@ export class Tokenizr {
         this.commit();
         break;
       } catch (error) {
-        this._log(`EXCEPTION: ${error.toString()}`);
         depths.push({ error, depth: this.depth() });
         this.rollback();
+
+        this._log(`EXCEPTION: ${error.toString()}`);
         continue;
       }
     }
@@ -478,7 +474,7 @@ export class Tokenizr {
   /**
    * Determine and return the next token
    */
-  _tokenize(): void {
+  private _tokenize(): void {
     /*  helper function for finishing parsing  */
     const finish = (): void => {
       if (!this._eof) {
@@ -527,7 +523,7 @@ export class Tokenizr {
       for (let i = 0; i < this._rules.length; i++) {
         if (this.config.debug) {
           this._log(
-            `  RULE: state(s): <${State.stringify(
+            `  RULE: state(s): <${stringifyTags(
               this._rules[i].state
             )}>, pattern: ${this._rules[i].pattern.source}`
           );
@@ -641,6 +637,19 @@ export class Tokenizr {
   }
 
   /**
+   * Push a rule onto the stack
+   */
+  private _pushRule(rule: Rule): this {
+    this._rules.push(rule);
+
+    this._log(
+      `rule: configure rule (state: ${rule.state.state}, pattern: ${rule.pattern.source})`
+    );
+
+    return this;
+  }
+
+  /**
    * Progress the line/column counter
    */
   private _progress(from: number, until: number): void {
@@ -668,15 +677,5 @@ export class Tokenizr {
         `from: <line ${line}, column ${column}>, ` +
         `to: <line ${this._line}, column ${this._column}>`
     );
-  }
-
-  private pushRule(rule: Rule): this {
-    this._rules.push(rule);
-
-    this._log(
-      `rule: configure rule (state: ${rule.state.state}, pattern: ${rule.pattern.source})`
-    );
-
-    return this;
   }
 }

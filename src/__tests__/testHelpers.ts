@@ -1,7 +1,7 @@
 import { Tokenizr } from "../../build";
 
-export const createTokenizer = (debug = false) => {
-  const tokenizr = new Tokenizr();
+export function getTokenizr(debug = false): Tokenizr {
+  const tokenizr = new Tokenizr({ debug });
 
   tokenizr.rule("default", /[a-zA-Z]+/, (ctx /*, m */) => {
     ctx.accept("symbol");
@@ -43,4 +43,4 @@ export const createTokenizer = (debug = false) => {
   tokenizr.debug(debug);
 
   return tokenizr;
-};
+}

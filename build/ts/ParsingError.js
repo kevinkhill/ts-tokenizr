@@ -1,5 +1,4 @@
 "use strict";
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 Object.defineProperty(exports, "__esModule", { value: true });
 const excerpt_1 = require("./excerpt");
 class ParsingError extends Error {

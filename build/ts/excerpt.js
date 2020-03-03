@@ -1,5 +1,4 @@
 "use strict";
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable no-control-regex */
 Object.defineProperty(exports, "__esModule", { value: true });
 function hex(ch) {

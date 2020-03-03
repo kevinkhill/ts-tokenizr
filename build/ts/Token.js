@@ -1,9 +1,5 @@
 "use strict";
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * internal helper class for token representation
- */
 class Token {
     constructor(type, value, text, pos = 0, line = 0, column = 0) {
         this.type = type;
@@ -24,10 +20,12 @@ class Token {
         ].join();
     }
     isA(type, value) {
-        if (type !== this.type)
+        if (type !== this.type) {
             return false;
-        if (arguments.length === 2 && value !== this.value)
+        }
+        if (value && value !== this.value) {
             return false;
+        }
         return true;
     }
 }

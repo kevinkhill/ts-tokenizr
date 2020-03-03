@@ -1,4 +1,5 @@
 import { ActionContext } from "./ActionContext";
+import { TaggedState } from "./State";
 
 export type Tags = Record<string, boolean>;
 
@@ -17,10 +18,10 @@ export interface DepthError {
   depth: number;
 }
 
-export interface TaggedState {
-  state: string;
-  tags: Array<string>;
-}
+// export interface TaggedState {
+//   state: string;
+//   tags: Array<string>;
+// }
 
 export interface Rule {
   state: TaggedState;

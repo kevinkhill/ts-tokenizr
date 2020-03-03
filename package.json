@@ -39,8 +39,9 @@
   },
   "scripts": {
     "demo": "babel-node demo/sample.js",
-    "test": "yarn tsc >/dev/null 2>&1; yarn jest",
+    "test": "yarn build >/dev/null 2>&1; yarn jest",
+    "build": "yarn tsc -p tsconfig.dist.json ",
     "test:js": "yarn build && mocha tests",
-    "build": "yarn babel src/tokenizr.js -o lib/tokenizr.js"
+    "build:js": "yarn babel src/tokenizr.js -o lib/tokenizr.js"
   }
 }

@@ -1,12 +1,10 @@
-import { TaggedState } from "./types";
-
-export function makeState(stateDef: string): State {
-  return new State(stateDef);
+export function makeState(stateDef: string): TaggedState {
+  return new TaggedState(stateDef);
 }
 
-export class State {
-  static stringify(state: TaggedState): string {
-    let output = state.state;
+export class TaggedState {
+  static stringify(): string {
+    let output = this._states;
 
     if (state.tags.length > 0) {
       output += " " + state.tags.map(tag => `#${tag}`).join(" ");
@@ -16,11 +14,7 @@ export class State {
   }
 
   _tags: Array<string> = [];
-  _name = "default";
-
-  get tags(): string {
-    return this._tags.map(tag => `#${tag}`).join(" ");
-  }
+  _states: Array<string> = ["default"];
 
   constructor(stateDef: string) {
     const pieces = stateDef.split(/\s*,\s*/g);
@@ -40,6 +34,30 @@ export class State {
   }
 
   toString(): string {
-    return `${this._name} ${this.tags}`;
+    return `${this._states.join(", ")} ${this.tagsToString()}`;
+  }
+
+  tagsToString(): string {
+    return this._tags.map(tag => `#${tag}`).join(" ");
+  }
+
+  pushState(state: string): this {
+    this._states.push(state);
+
+    return this;
+  }
+
+  popState(): string | undefined {
+    return this._states.pop();
+  }
+
+  pushTag(tag: string): this {
+    this._tags.push(tag);
+
+    return this;
+  }
+
+  popTag(): string | undefined {
+    return this._tags.pop();
   }
 }

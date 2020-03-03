@@ -1,9 +1,12 @@
-/**
- * internal helper class for token representation
- */
 export declare class Token {
-    constructor(type: any, value: any, text: any, pos?: number, line?: number, column?: number);
+    type: string;
+    value: unknown;
+    text: string;
+    pos: number;
+    line: number;
+    column: number;
+    constructor(type: string, value: unknown, text: string, pos?: number, line?: number, column?: number);
     toString(): string;
-    isA(type: any, value: any): boolean;
+    isA(type: string, value?: unknown): boolean;
 }
 //# sourceMappingURL=Token.d.ts.map

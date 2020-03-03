@@ -1,25 +1,29 @@
 import { ActionContext } from "./ActionContext";
 import { ParsingError } from "./ParsingError";
 import { Token } from "./Token";
+import { Action, Rule, Tags, TokenizrConfig } from "./types";
 export declare class Tokenizr {
-    _before: null;
-    _after: null;
-    _finish: null;
-    _rules: Array<never>;
-    _debug: boolean;
-    _input: string;
+    static readonly defaults: {
+        debug: boolean;
+    };
+    config: TokenizrConfig;
     _len: number;
-    _eof: boolean;
     _pos: number;
     _line: number;
     _column: number;
-    _state: Array<string>;
-    _tag: {};
-    _transaction: Array<never>;
-    _pending: Array<never>;
+    _input: string;
+    _eof: boolean;
     _stopped: boolean;
     _ctx: ActionContext;
-    constructor();
+    _rules: Array<Rule>;
+    _pending: Array<Token>;
+    _after: Action | null;
+    _before: Action | null;
+    _finish: Action | null;
+    _tag: Tags;
+    _state: Array<string>;
+    _transaction: Array<Array<Token>>;
+    constructor(config?: Partial<TokenizrConfig>);
     /**
      * Reset the internal state
      */
@@ -33,38 +37,58 @@ export declare class Tokenizr {
      */
     debug(debug: boolean): this;
     /**
-     * Output a debug message
-     */
-    _log(msg: string): void;
-    /**
      * Provide (new) input string to tokenize
      */
     input(input: string): this;
-    push(state: any): this;
-    pop(): string | undefined;
-    state(state: any): string | this;
-    tag(tag: any): this;
-    tagged(tag: any): boolean;
-    untag(tag: any): this;
-    before(action: any): this;
-    after(action: any): this;
-    finish(action: any): this;
+    /**
+     * Push state
+     */
+    push(state: string): this;
+    /**
+     * Pop state
+     */
+    pop(): this | void;
+    /**
+     * get/set state
+     */
+    state(): string;
+    state(state: string): this;
+    /**
+     * Set a tag
+     */
+    tag(tag: string): this;
+    /**
+     * Check whether tag is set
+     */
+    tagged(tag: string): boolean;
+    /**
+     * Unset a tag
+     */
+    untag(tag: string): this;
+    /**
+     * Configure a tokenization before-rule callback
+     */
+    before(action: Action): this;
+    /**
+     * Configure a tokenization after-rule callback
+     */
+    after(action: Action): this;
+    /**
+     * Configure a tokenization finish callback
+     */
+    finish(action: Action): this;
+    /**
+     * Configure a stateful tokenization rule
+     */
+    stateRule(state: string, pattern: RegExp, action: Function, name?: string): this;
     /**
      * Configure a tokenization rule
      */
-    rule(state: any, pattern: any, action: any, name?: string): this;
-    /**
-     * Progress the line/column counter
-     */
-    private _progress;
-    /**
-     * Determine and return the next token
-     */
-    private _tokenize;
+    rule(pattern: RegExp, action: Function, name?: string): this;
     /**
      * Determine and return next token
      */
-    token(): Token;
+    token(): Token | null;
     /**
      * Determine and return all tokens
      */
@@ -75,15 +99,15 @@ export declare class Tokenizr {
     /**
      * Peek at the next token or token at particular offset
      */
-    peek(offset: number): never;
+    peek(offset?: number): Token;
     /**
      * Skip one or more tokens
      */
-    skip(len: number): this;
+    skip(len?: number): this;
     /**
      * Consume the current token (by expecting it to be a particular symbol)
      */
-    consume(type: any, value: any): Token;
+    consume(type: string, value?: unknown): Token;
     /**
      * Open tokenization transaction
      */
@@ -103,6 +127,19 @@ export declare class Tokenizr {
     /**
      * Execute multiple alternative callbacks
      */
-    alternatives(...alternatives: any[]): null;
+    alternatives(...alternatives: Array<() => never>): any;
+    /**
+     * Output a debug message
+     */
+    _log(msg: string): void;
+    /**
+     * Determine and return the next token
+     */
+    _tokenize(): void;
+    /**
+     * Progress the line/column counter
+     */
+    private _progress;
+    private pushRule;
 }
 //# sourceMappingURL=Tokenizr.d.ts.map

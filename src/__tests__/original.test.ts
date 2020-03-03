@@ -1,4 +1,4 @@
-const { createTokenizer } = require("./testHelpers");
+const { createTokenizer } = require("./setup");
 
 describe("ts-tokenizr library", () => {
   const tokenizr = createTokenizer();
@@ -23,32 +23,41 @@ describe("ts-tokenizr library", () => {
 
     expect(tokens).toBeInstanceOf(Array);
     expect(tokens).toHaveLength(5);
+
     expect(tokens[0]).toEqual({
-      type: "syml",
-        value: "foo",
-      text: "            po 0,
-        lin            colu: 1
-      });
+      type: "symbol",
+      value: "foo",
+      text: "foo",
+      pos: 0,
+      line: 1,
+      column: 1
+    });
 
     expect(tokens[1]).toEqual({
-      type: "numr",
-        value: 42,
-      text:             po 3,
-        lin            colu: 4
-      });
+      type: "number",
+      value: 42,
+      text: "42",
+      pos: 3,
+      line: 1,
+      column: 4
+    });
 
     expect(tokens[2]).toEqual({
-      type: "strg",
-        value: "bar baz",
-      text: '"bar b            po 8,
-        lin            colu: 2
-      });
+      type: "string",
+      value: "bar baz",
+      text: '"bar baz"',
+      pos: 8,
+      line: 2,
+      column: 2
+    });
 
     expect(tokens[3]).toEqual({
-      type: "syml",
-        value: "quux",
-      text: "q            pos20,
-        lin            colu: 2
-      });
+      type: "symbol",
+      value: "quux",
+      text: "quux",
+      pos: 20,
+      line: 3,
+      column: 2
+    });
   });
 });

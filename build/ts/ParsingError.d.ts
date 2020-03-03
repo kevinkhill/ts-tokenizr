@@ -1,5 +1,9 @@
 export declare class ParsingError extends Error {
-    constructor(message: any, pos: any, line: any, column: any, input: any);
+    pos: number;
+    line: number;
+    column: number;
+    input: string;
+    constructor(message: string, pos: number, line: number, column: number, input: string);
     /**
      * Render a useful string representation
      */

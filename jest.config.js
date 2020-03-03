@@ -1,5 +1,8 @@
+/* eslint-disable import/no-commonjs */
+const baseConfig = require("../../jest.config.js");
+
 module.exports = {
-  ...require("../../jest.config.js"),
+  ...baseConfig,
   displayName: "ts-tokenizr",
   testPathIgnorePatterns: ["setup.ts"]
 };

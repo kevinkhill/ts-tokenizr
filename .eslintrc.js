@@ -30,6 +30,41 @@ module.exports = {
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended" // KEEP THIS LAST
   ],
+  overrides: [
+    {
+      files: ["*/__tests__/**/*.test.ts"],
+      globals: {
+        getTokenizer: true
+      },
+      env: {
+        "jest/globals": true
+      },
+      extends: [
+        "plugin:jest/style",
+        "plugin:jest/recommended",
+        "plugin:jest-formatting/recommended"
+      ],
+      plugins: ["jest", "jest-formatting"],
+      rules: {
+        "@typescript-eslint/no-misused-promises": "off",
+        "jest/no-disabled-tests": "warn",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error"
+      }
+    }
+  ],
+  settings: {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      typescript: {
+        alwaysTryTypes: true
+      }
+    }
+  },
   rules: {
     quotes: "off",
     "sort-imports": "off",
@@ -110,37 +145,5 @@ module.exports = {
         optionalDependencies: false
       }
     ]
-  },
-  settings: {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts"]
-    },
-    "import/resolver": {
-      typescript: {
-        alwaysTryTypes: true
-      }
-    }
-  },
-  overrides: [
-    {
-      files: ["src/__tests__/**/*.test.ts"],
-      env: {
-        "jest/globals": true
-      },
-      extends: [
-        "plugin:jest/style",
-        "plugin:jest/recommended",
-        "plugin:jest-formatting/recommended"
-      ],
-      plugins: ["jest", "jest-formatting"],
-      rules: {
-        "@typescript-eslint/no-misused-promises": "off",
-        "jest/no-disabled-tests": "warn",
-        "jest/prefer-to-have-length": "warn",
-        "jest/valid-expect": "error",
-        "jest/no-focused-tests": "error",
-        "jest/no-identical-title": "error"
-      }
-    }
-  ]
+  }
 };

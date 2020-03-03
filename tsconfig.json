@@ -20,14 +20,11 @@
     /* Module Resolution Options */
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
     "noImplicitThis": true
   },
   "exclude": [
     "node_modules",
-    "**/__tests__/**/*",
-    "**/__mocks__/**/*",
     "**/build/**/*"
   ]
 }
