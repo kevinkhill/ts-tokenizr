@@ -3,6 +3,7 @@
 import { ActionContext } from "./ActionContext";
 import { excerpt } from "./excerpt";
 import { ParsingError } from "./ParsingError";
+import { State } from "./State";
 import { Token } from "./Token";
 import {
   Action,
@@ -213,7 +214,7 @@ export class Tokenizr {
   }
 
   /**
-   * Configure a tokenization rule
+   * Configure a stateful tokenization rule
    */
   stateRule(
     state: string,
@@ -221,35 +222,24 @@ export class Tokenizr {
     action: Function,
     name = "unknown"
   ): this {
-    this._rules.push({
+    return this.pushRule({
       state: postProcessState(state),
       pattern: postProcessPattern(pattern),
       action,
       name
     });
-
-    this._log(
-      `rule: configure rule (state: ${state}, pattern: ${pattern.source})`
-    );
-
-    return this;
   }
 
+  /**
+   * Configure a tokenization rule
+   */
   rule(pattern: RegExp, action: Function, name = "unknown"): this {
-    const state = { state: "*", tags: [] };
-
-    this._rules.push({
+    return this.pushRule({
       state: { state: "*", tags: [] },
       pattern: postProcessPattern(pattern),
       action,
       name
     });
-
-    this._log(
-      `rule: configure rule (state: ${state}, pattern: ${pattern.source})`
-    );
-
-    return this;
   }
 
   /**
@@ -536,26 +526,16 @@ export class Tokenizr {
       /*  iterate over all rules...  */
       for (let i = 0; i < this._rules.length; i++) {
         if (this.config.debug) {
-          const state = this._rules[i].state
-            .map(item => {
-              let output = item.state;
-
-              if (item.tags.length > 0)
-                output +=
-                  " " + item.tags.map(tag => `#${tag}`).join(" ");
-
-              return output;
-            })
-            .join(", ");
-
           this._log(
-            `  RULE: state(s): <${state}>, ` +
-              `pattern: ${this._rules[i].pattern.source}`
+            `  RULE: state(s): <${State.stringify(
+              this._rules[i].state
+            )}>, pattern: ${this._rules[i].pattern.source}`
           );
         }
 
         /*  one of rule's states (and all of its tags) has to match  */
         //@TODO state is still not working right...
+        //@TODO state can be an array...
         let matches = false;
         const states = this._rules[i].state.map(item => item.state);
         let idx = states.indexOf("*");
@@ -688,5 +668,15 @@ export class Tokenizr {
         `from: <line ${line}, column ${column}>, ` +
         `to: <line ${this._line}, column ${this._column}>`
     );
+  }
+
+  private pushRule(rule: Rule): this {
+    this._rules.push(rule);
+
+    this._log(
+      `rule: configure rule (state: ${rule.state.state}, pattern: ${rule.pattern.source})`
+    );
+
+    return this;
   }
 }
