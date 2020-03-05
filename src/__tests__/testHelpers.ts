@@ -5,7 +5,7 @@ import { Tokenizr } from "../../build";
 export function getStatelessTokenizr(debug = false): Tokenizr {
   const tokenizr = new Tokenizr({ debug });
 
-  tokenizr.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, (ctx, match) => {
+  tokenizr.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, ctx => {
     ctx.accept("id");
   });
 
@@ -17,15 +17,15 @@ export function getStatelessTokenizr(debug = false): Tokenizr {
     ctx.accept("string", match[1].replace(/\\"/g, '"'));
   });
 
-  tokenizr.rule(/\/\/[^\r\n]*\r?\n/, (ctx, match) => {
+  tokenizr.rule(/\/\/[^\r\n]*\r?\n/, ctx => {
     ctx.ignore();
   });
 
-  tokenizr.rule(/[ \t\r\n]+/, (ctx, match) => {
+  tokenizr.rule(/[ \t\r\n]+/, ctx => {
     ctx.ignore();
   });
 
-  tokenizr.rule(/./, (ctx, match) => {
+  tokenizr.rule(/./, ctx => {
     ctx.accept("char");
   });
 

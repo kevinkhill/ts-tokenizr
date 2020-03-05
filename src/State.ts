@@ -3,7 +3,7 @@ export function makeState(stateDef: string): TaggedState {
 }
 
 export class TaggedState {
-  static _states: any;
+  static _states: Array<string>;
 
   // stringify(): string {
   //   let output = this._states;

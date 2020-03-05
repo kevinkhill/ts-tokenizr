@@ -39,7 +39,7 @@ export class ActionContext {
   /**
    * Pass-through functions to attached tokenizer
    */
-  push(...args): this {
+  push(...args: Array<unknown>): this {
     this._tokenizr.push(...args);
 
     return this;
@@ -49,21 +49,28 @@ export class ActionContext {
     return this._tokenizr.pop(...args);
   }
 
+  /**
+   * Get / Set state in the context
+   *
+   * @todo dont like this...
+   */
   state(...args) {
     if (args.length > 0) {
       this._tokenizr.state(...args);
+
       return this;
     }
 
     return this._tokenizr.state(...args);
   }
 
-  tag(...args) {
+  tag(...args): this {
     this._tokenizr.tag(...args);
+
     return this;
   }
 
-  tagged(...args) {
+  tagged(...args): boolean {
     return this._tokenizr.tagged(...args);
   }
 

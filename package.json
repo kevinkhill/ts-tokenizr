@@ -29,9 +29,10 @@
   "homepage": "https://github.com/rse/tokenizr",
   "bugs": "https://github.com/rse/tokenizr/issues",
   "scripts": {
-    "test": "yarn jest",
     "demo": "babel-node ./demo/sample.js",
+    "test": "yarn jest",
     "clean": "yarn rimraf ./build/*",
+    "lint": "yarn eslint \"./src/**/*.ts\"",
     "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json"
   },
   "devDependencies": {

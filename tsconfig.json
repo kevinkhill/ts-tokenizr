@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "rootDir": "src",
-    "outDir": "build",
+    "outDir": "build/spec",
     "target": "es2015",
     "module": "commonjs",
     "lib": [

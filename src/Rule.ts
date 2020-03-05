@@ -32,8 +32,8 @@ export class Rule {
     }
 
     return {
-      state: states[0],
-      tags
+      _states: [states[0]],
+      _tags: tags
     };
   }
 
@@ -81,5 +81,13 @@ export class Rule {
       this._action = action as Action;
       this._name = name;
     }
+  }
+
+  mapStates(cb: (string) => string): Array<string> {
+    return this._state._states.map(cb);
+  }
+
+  mapTags(cb: (string) => string): Array<string> {
+    return this._state._tags.map(cb);
   }
 }
