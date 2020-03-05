@@ -1,7 +1,7 @@
-import { getTokenizr } from "./testHelpers";
+import { getStatefulTokenizr } from "./testHelpers";
 
 describe("tags and tagging", () => {
-  const tokenizr = getTokenizr();
+  const tokenizr = getStatefulTokenizr();
 
   test("should have the expected functionality", () => {
     expect(tokenizr.tagged("test")).toBeFalsy();

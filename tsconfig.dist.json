@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "build/spec",
   },
-  "include": [
+  "exclude": [
     "**/__tests__/**/*"
   ]
 }

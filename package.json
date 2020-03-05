@@ -28,20 +28,20 @@
   "license": "MIT",
   "homepage": "https://github.com/rse/tokenizr",
   "bugs": "https://github.com/rse/tokenizr/issues",
+  "scripts": {
+    "test": "yarn jest",
+    "demo": "babel-node ./demo/sample.js",
+    "clean": "yarn rimraf ./build/*",
+    "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json"
+  },
   "devDependencies": {
     "@babel/cli": "7.8.3",
     "@babel/core": "7.8.3",
     "@babel/preset-env": "7.8.3",
     "chai": "4.2.0",
     "mocha": "^7.1.0",
+    "rimraf": "^3.0.2",
     "typedoc": "^0.16.11",
     "typescript": "^3.8.2"
-  },
-  "scripts": {
-    "demo": "babel-node demo/sample.js",
-    "test": "yarn build >/dev/null 2>&1; yarn jest",
-    "build": "yarn tsc -p tsconfig.dist.json ",
-    "test:js": "yarn build && mocha tests",
-    "build:js": "yarn babel src/tokenizr.js -o lib/tokenizr.js"
   }
 }

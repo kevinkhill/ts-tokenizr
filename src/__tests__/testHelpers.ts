@@ -1,6 +1,44 @@
+import fs from "fs";
+
 import { Tokenizr } from "../../build";
 
-export function getTokenizr(debug = false): Tokenizr {
+export function getStatelessTokenizr(debug = false): Tokenizr {
+  const tokenizr = new Tokenizr({ debug });
+
+  tokenizr.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, (ctx, match) => {
+    ctx.accept("id");
+  });
+
+  tokenizr.rule(/[+-]?[0-9]+/, (ctx, match) => {
+    ctx.accept("number", parseInt(match[0]));
+  });
+
+  tokenizr.rule(/"((?:\\"|[^\r\n])*)"/, (ctx, match) => {
+    ctx.accept("string", match[1].replace(/\\"/g, '"'));
+  });
+
+  tokenizr.rule(/\/\/[^\r\n]*\r?\n/, (ctx, match) => {
+    ctx.ignore();
+  });
+
+  tokenizr.rule(/[ \t\r\n]+/, (ctx, match) => {
+    ctx.ignore();
+  });
+
+  tokenizr.rule(/./, (ctx, match) => {
+    ctx.accept("char");
+  });
+
+  // eslint-disable-next-line no-sync
+  const cfg = fs.readFileSync("sample.cfg", "utf8");
+
+  tokenizr.input(cfg);
+  tokenizr.debug(debug);
+
+  return tokenizr;
+}
+
+export function getStatefulTokenizr(debug = false): Tokenizr {
   const tokenizr = new Tokenizr({ debug });
 
   tokenizr.rule("default", /[a-zA-Z]+/, (ctx /*, m */) => {

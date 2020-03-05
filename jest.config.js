@@ -4,5 +4,5 @@ const baseConfig = require("../../jest.config.js");
 module.exports = {
   ...baseConfig,
   displayName: "ts-tokenizr",
-  testPathIgnorePatterns: ["setup.ts"]
+  testPathIgnorePatterns: ["testHelpers.ts"]
 };

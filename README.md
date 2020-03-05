@@ -1,19 +1,20 @@
 
-Tokenizr
+TS-Tokenizr
 ========
 
-Flexible String Tokenization Library for JavaScript
+Flexible String Tokenization Library for TypeScript
 
-<p/>
-<img src="https://nodei.co/npm/tokenizr.png?downloads=true&stars=true" alt=""/>
 
-<p/>
-<img src="https://david-dm.org/rse/tokenizr.png" alt=""/>
+Inspiration
+-----
+
+So I happened upon [this little gem of a library](https://github.com/rse/tokenizr) after writing my own for a project. It had many more features than mine, so to try and further my own knowledge and as practice, I converted the whole project to TypeScript! This way I could easily type tokens, add new features, and more. I also decided to swap mocha for jest since I was working in a monorepo and it just worked.
+
 
 About
 -----
 
-Tokenizr is a small JavaScript library, providing powerful and flexible
+Tokenizr is a small TypeScript library, providing powerful and flexible
 string tokenization functionality. It is intended to be be used as
 the underlying "lexical scanner" in a Recursive Descent based "syntax
 parser", but can be used for other parsing purposes, too. Its distinct
