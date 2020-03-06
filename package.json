@@ -1,6 +1,6 @@
 {
   "name": "ts-tokenizr",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "String Tokenization Library for TypeScript",
   "keywords": [
     "string",
@@ -30,19 +30,25 @@
   "bugs": "https://github.com/rse/tokenizr/issues",
   "scripts": {
     "demo": "babel-node ./demo/sample.js",
-    "test": "yarn jest",
+    "test": "yarn build && yarn jest",
+    "test:stateful": "yarn test --testPathPattern stateful",
+    "test:stateless": "yarn test --testPathPattern stateless",
+    "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json",
     "clean": "yarn rimraf ./build/*",
     "lint": "yarn eslint \"./src/**/*.ts\"",
-    "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json"
+    "docs": "typedoc --out ./docs ./src"
   },
   "devDependencies": {
-    "@babel/cli": "7.8.3",
-    "@babel/core": "7.8.3",
-    "@babel/preset-env": "7.8.3",
-    "chai": "4.2.0",
-    "mocha": "^7.1.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "concurrently": "^5.1.0",
     "rimraf": "^3.0.2",
     "typedoc": "^0.16.11",
     "typescript": "^3.8.2"
+  },
+  "lint-staged": {
+    "./src/**/*.ts": "eslint --cache --fix"
   }
 }

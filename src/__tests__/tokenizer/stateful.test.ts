@@ -1,15 +1,7 @@
-import { getStatefulTokenizr } from "./testHelpers";
+import { getStatefulTokenizr } from "../testHelpers";
 
-describe("ts-tokenizr library", () => {
+describe("ts-tokenizr library, with states", () => {
   const tokenizr = getStatefulTokenizr();
-
-  test("should expose its official API", () => {
-    expect(tokenizr.token).toBeInstanceOf(Function);
-    expect(tokenizr.tokens).toBeInstanceOf(Function);
-    expect(tokenizr.tag).toBeInstanceOf(Function);
-    expect(tokenizr.tagged).toBeInstanceOf(Function);
-    expect(tokenizr.untag).toBeInstanceOf(Function);
-  });
 
   test("should have the expected functionality", () => {
     let tokens;

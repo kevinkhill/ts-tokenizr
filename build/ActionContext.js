@@ -110,6 +110,12 @@ class ActionContext {
         return this;
     }
     accept(type, value) {
+        // I believe that since we are accepting, that it is safe to
+        // assume that this._match[0] is a string, so we'll check if
+        // this._match is not null, and error if so. x_x
+        if (this._match === null) {
+            throw Error("this._match was null when trying to .accept()");
+        }
         if (arguments.length < 2) {
             // eslint-disable-next-line no-param-reassign
             value = this._match[0];
