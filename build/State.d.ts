@@ -1,6 +1,6 @@
 export declare function makeState(stateDef: string): TaggedState;
 export declare class TaggedState {
-    static _states: any;
+    static _states: Array<string>;
     _tags: Array<string>;
     _states: Array<string>;
     constructor(stateDef: string);

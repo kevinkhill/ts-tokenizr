@@ -1,11 +1,12 @@
 import { ActionContext } from "./ActionContext";
+import { Rule } from "./Rule";
 
 export type Tags = Record<string, boolean>;
 
 export type Action = (
   ctx: ActionContext,
-  match?: Array<string>,
-  rule?: Rule
+  match: Array<string>,
+  rule: Rule
 ) => void;
 
 export interface TokenizrConfig {

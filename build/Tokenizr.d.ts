@@ -46,11 +46,11 @@ export declare class Tokenizr {
      */
     push(state: string): this;
     /**
-     * Pop state
+     * Pop state from the stack
      */
-    pop(): this | void;
+    pop(): this;
     /**
-     * get/set state
+     * get/set the state
      */
     state(): string;
     state(state: string): this;
@@ -83,7 +83,7 @@ export declare class Tokenizr {
      *
      * @todo Figure this out!s
      */
-    rule(state: string | RegExp, pattern: RegExp | Action, action: Action | string, name?: string): this;
+    rule(state: string | RegExp, pattern: RegExp | Action, action?: Action | string, name?: string): this;
     /**
      * Determine and return next token
      */
@@ -126,7 +126,7 @@ export declare class Tokenizr {
     /**
      * Execute multiple alternative callbacks
      */
-    alternatives(...alternatives: Array<() => never>): any;
+    alternatives(...alternatives: Array<() => never>): unknown;
     /**
      * Output a debug message
      */

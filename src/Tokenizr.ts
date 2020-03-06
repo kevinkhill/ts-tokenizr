@@ -112,9 +112,9 @@ export class Tokenizr {
   }
 
   /**
-   * Pop state
+   * Pop state from the stack
    */
-  pop(): this | void {
+  pop(): this {
     if (this._state.length < 2) {
       throw new Error("no more custom states to pop");
     }
@@ -132,24 +132,24 @@ export class Tokenizr {
   }
 
   /**
-   * get/set state
+   * get/set the state
    */
   state(): string;
   state(state: string): this;
   state(state?: string): this | string {
-    if (typeof state === "string") {
-      this._log(
-        "    STATE (SET): " +
-          `old: <${this._state[this._state.length - 1]}>, ` +
-          `new: <${state}>`
-      );
-
-      this._state[this._state.length - 1] = state;
-
-      return this;
+    if (typeof state === "undefined") {
+      return this._state[this._state.length - 1];
     }
 
-    return this._state[this._state.length - 1];
+    this._log(
+      "    STATE (SET): " +
+        `old: <${this._state[this._state.length - 1]}>, ` +
+        `new: <${state}>`
+    );
+
+    this._state[this._state.length - 1] = state;
+
+    return this;
   }
 
   /**
@@ -157,7 +157,9 @@ export class Tokenizr {
    */
   tag(tag: string): this {
     this._tag[tag] = true;
+
     this._log(`    TAG (ADD): ${tag}`);
+
     return this;
   }
 
@@ -173,7 +175,9 @@ export class Tokenizr {
    */
   untag(tag: string): this {
     delete this._tag[tag];
+
     this._log(`    TAG (DEL): ${tag}`);
+
     return this;
   }
 
@@ -209,12 +213,19 @@ export class Tokenizr {
   rule(
     state: string | RegExp,
     pattern: RegExp | Action,
-    action?: Action | string,
+    action: Action | string = "unknown",
     name = "unknown"
   ): this {
     let rule: Rule;
 
-    if (
+    if (isRegExp(state) && isAction(pattern) && action === "unknown") {
+      rule = Rule.create({
+        state: "default",
+        pattern: state,
+        action: pattern,
+        name: action
+      });
+    } else if (
       isRegExp(state) &&
       isAction(pattern) &&
       typeof action === "string"

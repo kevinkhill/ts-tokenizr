@@ -36,8 +36,8 @@ class Rule {
             throw new Error("exactly one state required");
         }
         return {
-            state: states[0],
-            tags
+            _states: [states[0]],
+            _tags: tags
         };
     }
     static processPattern(pattern) {
@@ -59,6 +59,12 @@ class Rule {
         if (typeof pattern.unicode === "boolean" && pattern.unicode)
             flags += "u";
         return new RegExp(pattern.source, flags);
+    }
+    mapStates(cb) {
+        return this._state._states.map(cb);
+    }
+    mapTags(cb) {
+        return this._state._tags.map(cb);
     }
 }
 exports.Rule = Rule;

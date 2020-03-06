@@ -8,5 +8,7 @@ export declare class Rule {
     static processState(state: string): TaggedState;
     static processPattern(pattern: RegExp): RegExp;
     constructor(state: string | RegExp, pattern: RegExp | Action, action: Action | string, name?: string);
+    mapStates(cb: (string: any) => string): Array<string>;
+    mapTags(cb: (string: any) => string): Array<string>;
 }
 //# sourceMappingURL=Rule.d.ts.map

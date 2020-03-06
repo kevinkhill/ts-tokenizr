@@ -10,52 +10,79 @@ class ActionContext {
         this._match = null;
         this._tokenizr = tokenizr;
     }
-    /**
-     * Store and retrieve user data attached to context
-     */
     data(key, value) {
-        if (!value) {
+        if (typeof value === "undefined") {
             return this._data[key];
         }
         this._data[key] = value;
+        return true;
     }
     /**
      * Retrieve information of current matching
      */
     info() {
+        const len = this._match ? this._match[0].length : NaN;
         return {
             line: this._tokenizr._line,
             column: this._tokenizr._column,
             pos: this._tokenizr._pos,
-            len: this._match[0].length
+            len
         };
     }
     /**
-     * Pass-through functions to attached tokenizer
+     * Pass-through to the attached tokenizer
+     *
+     * @inheritdoc
      */
-    push(...args) {
-        this._tokenizr.push(...args);
+    push(state) {
+        this._tokenizr.push(state);
         return this;
     }
-    pop(...args) {
-        return this._tokenizr.pop(...args);
+    /**
+     * Pass-through to the attached tokenizer
+     *
+     * @inheritdoc
+     */
+    pop() {
+        this._tokenizr.pop();
+        return this;
     }
-    state(...args) {
-        if (args.length > 0) {
-            this._tokenizr.state(...args);
-            return this;
+    /**
+     * Get / Set state in the context
+     *
+     * @todo dont like this...
+     */
+    state(state) {
+        if (typeof state === "undefined") {
+            return this._tokenizr.state();
         }
-        return this._tokenizr.state(...args);
-    }
-    tag(...args) {
-        this._tokenizr.tag(...args);
+        this._tokenizr.state(state);
         return this;
     }
-    tagged(...args) {
-        return this._tokenizr.tagged(...args);
+    /**
+     * Pass-through to the attached tokenizer
+     *
+     * @inheritdoc
+     */
+    tag(tag) {
+        this._tokenizr.tag(tag);
+        return this;
     }
-    untag(...args) {
-        this._tokenizr.untag(...args);
+    /**
+     * Pass-through to the attached tokenizer
+     *
+     * @inheritdoc
+     */
+    tagged(tag) {
+        return this._tokenizr.tagged(tag);
+    }
+    /**
+     * Pass-through to the attached tokenizer
+     *
+     * @inheritdoc
+     */
+    untag(tag) {
+        this._tokenizr.untag(tag);
         return this;
     }
     /**
@@ -82,9 +109,6 @@ class ActionContext {
         this._ignore = true;
         return this;
     }
-    /**
-     * Accept current matching as a new token
-     */
     accept(type, value) {
         if (arguments.length < 2) {
             // eslint-disable-next-line no-param-reassign
