@@ -1,6 +1,6 @@
 import { ActionContext } from "./ActionContext";
 import { excerpt } from "./lib/excerpt";
-import { isAction, isRegExp } from "./lib/guards";
+import { isRegExp } from "./lib/guards";
 import { stringifyTags } from "./lib/util";
 import { ParsingError } from "./ParsingError";
 import { Rule } from "./Rule";
@@ -208,47 +208,60 @@ export class Tokenizr {
   /**
    * Configure a tokenization rule
    *
-   * @todo Figure this out!s
+   * @todo Figure this out!!!!
    */
+  rule(
+    state: RegExp,
+    pattern: Action,
+    action: never,
+    name: never
+  ): this;
+  rule(
+    state: RegExp,
+    pattern: Action,
+    action: string,
+    name: never
+  ): this;
+  rule(
+    state: string,
+    pattern: RegExp,
+    action: Action,
+    name: never
+  ): this;
+  rule(
+    state: string,
+    pattern: RegExp,
+    action: Action,
+    name: string
+  ): this;
   rule(
     state: string | RegExp,
     pattern: RegExp | Action,
     action: Action | string = "unknown",
     name = "unknown"
   ): this {
-    let rule: Rule;
+    const rule = new Rule();
 
-    if (isRegExp(state) && isAction(pattern) && action === "unknown") {
-      rule = Rule.create({
-        state: "default",
-        pattern: state,
-        action: pattern,
-        name: action
-      });
-    } else if (
-      isRegExp(state) &&
-      isAction(pattern) &&
-      typeof action === "string"
-    ) {
-      rule = Rule.create({
-        state: "default",
-        pattern: state,
-        action: pattern,
-        name: action
-      });
-    } else if (
-      typeof state === "string" &&
-      isRegExp(pattern) &&
-      isAction(action)
-    ) {
-      rule = Rule.create({
-        state,
-        pattern,
-        action,
-        name
-      });
+    if (typeof state === "string") {
+      rule.setState(state);
     } else {
-      throw Error("Invalid rule definitions");
+      rule.setPattern(state);
+    }
+
+    if (isRegExp(pattern)) {
+      rule.setPattern(pattern);
+    } else {
+      rule.setAction(pattern);
+    }
+
+    if (typeof action === "string") {
+      rule.setName(action);
+    } else {
+      rule.setAction(action);
+    }
+
+    if (typeof name === "string") {
+      rule.setName(name);
     }
 
     return this._pushRule(rule);
@@ -554,14 +567,18 @@ export class Tokenizr {
         const states = this._rules[i]._state._states;
         let idx = states.indexOf("*");
 
-        if (idx < 0)
+        if (idx < 0) {
           idx = states.indexOf(this._state[this._state.length - 1]);
+        }
 
         if (idx >= 0) {
           matches = true;
           let tags = this._rules[i]._state[idx].tags;
           tags = tags.filter(tag => !this._tag[tag]);
-          if (tags.length > 0) matches = false;
+
+          if (tags.length > 0) {
+            matches = false;
+          }
         }
 
         if (!matches) continue;
@@ -595,7 +612,12 @@ export class Tokenizr {
             );
           }
 
-          this._rules[i]._action.call(this._ctx, this._ctx, found);
+          this._rules[i]._action.call(
+            this._ctx,
+            this._ctx,
+            found,
+            this._rules[i]
+          );
 
           if (this._after !== null) {
             this._after.call(
@@ -668,7 +690,7 @@ export class Tokenizr {
     this._rules.push(rule);
 
     this._log(
-      `rule: configure rule (state: ${rule._state.state}, pattern: ${rule._pattern.source})`
+      `rule: configure rule (state: ${rule._state._states}, pattern: ${rule._pattern.source})`
     );
 
     return this;
