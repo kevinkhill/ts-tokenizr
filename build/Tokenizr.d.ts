@@ -81,9 +81,12 @@ export declare class Tokenizr {
     /**
      * Configure a tokenization rule
      *
-     * @todo Figure this out!s
+     * @todo Figure this out!!!!
      */
-    rule(state: string | RegExp, pattern: RegExp | Action, action?: Action | string, name?: string): this;
+    rule(state: RegExp, pattern: Action, action: never, name: never): this;
+    rule(state: RegExp, pattern: Action, action: string, name: never): this;
+    rule(state: string, pattern: RegExp, action: Action, name: never): this;
+    rule(state: string, pattern: RegExp, action: Action, name: string): this;
     /**
      * Determine and return next token
      */

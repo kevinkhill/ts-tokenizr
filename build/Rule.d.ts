@@ -1,14 +1,18 @@
-import { Action, DefaultRule, StateRule, TaggedState } from "./types";
+import { Action, TaggedState } from "./types";
 export declare class Rule {
+    /**
+     * @todo this might need to be set to default in the/a constructor...
+     */
     _state: TaggedState;
     _pattern: RegExp;
     _action: Action;
     _name: string;
-    static create(rule: DefaultRule | StateRule): Rule;
-    static processState(state: string): TaggedState;
-    static processPattern(pattern: RegExp): RegExp;
-    constructor(state: string | RegExp, pattern: RegExp | Action, action: Action | string, name?: string);
-    mapStates(cb: (string: any) => string): Array<string>;
-    mapTags(cb: (string: any) => string): Array<string>;
+    get complete(): boolean;
+    setName(name: string): void;
+    setAction(action: Action): void;
+    setState(state: string): void;
+    setPattern(pattern: RegExp): void;
+    stateMap(mapper: (state: string) => string): Array<string>;
+    tagMap(mapper: (state: string) => string): Array<string>;
 }
 //# sourceMappingURL=Rule.d.ts.map

@@ -148,43 +148,28 @@ class Tokenizr {
         this._finish = action;
         return this;
     }
-    /**
-     * Configure a tokenization rule
-     *
-     * @todo Figure this out!s
-     */
     rule(state, pattern, action = "unknown", name = "unknown") {
-        let rule;
-        if (guards_1.isRegExp(state) && guards_1.isAction(pattern) && action === "unknown") {
-            rule = Rule_1.Rule.create({
-                state: "default",
-                pattern: state,
-                action: pattern,
-                name: action
-            });
-        }
-        else if (guards_1.isRegExp(state) &&
-            guards_1.isAction(pattern) &&
-            typeof action === "string") {
-            rule = Rule_1.Rule.create({
-                state: "default",
-                pattern: state,
-                action: pattern,
-                name: action
-            });
-        }
-        else if (typeof state === "string" &&
-            guards_1.isRegExp(pattern) &&
-            guards_1.isAction(action)) {
-            rule = Rule_1.Rule.create({
-                state,
-                pattern,
-                action,
-                name
-            });
+        const rule = new Rule_1.Rule();
+        if (typeof state === "string") {
+            rule.setState(state);
         }
         else {
-            throw Error("Invalid rule definitions");
+            rule.setPattern(state);
+        }
+        if (guards_1.isRegExp(pattern)) {
+            rule.setPattern(pattern);
+        }
+        else {
+            rule.setAction(pattern);
+        }
+        if (typeof action === "string") {
+            rule.setName(action);
+        }
+        else {
+            rule.setAction(action);
+        }
+        if (typeof name === "string") {
+            rule.setName(name);
         }
         return this._pushRule(rule);
     }
@@ -403,14 +388,16 @@ class Tokenizr {
                 let matches = false;
                 const states = this._rules[i]._state._states;
                 let idx = states.indexOf("*");
-                if (idx < 0)
+                if (idx < 0) {
                     idx = states.indexOf(this._state[this._state.length - 1]);
+                }
                 if (idx >= 0) {
                     matches = true;
                     let tags = this._rules[i]._state[idx].tags;
                     tags = tags.filter(tag => !this._tag[tag]);
-                    if (tags.length > 0)
+                    if (tags.length > 0) {
                         matches = false;
+                    }
                 }
                 if (!matches)
                     continue;
@@ -432,7 +419,7 @@ class Tokenizr {
                     if (this._before !== null) {
                         this._before.call(this._ctx, this._ctx, found, this._rules[i]);
                     }
-                    this._rules[i]._action.call(this._ctx, this._ctx, found);
+                    this._rules[i]._action.call(this._ctx, this._ctx, found, this._rules[i]);
                     if (this._after !== null) {
                         this._after.call(this._ctx, this._ctx, found, this._rules[i]);
                     }
@@ -478,7 +465,7 @@ class Tokenizr {
      */
     _pushRule(rule) {
         this._rules.push(rule);
-        this._log(`rule: configure rule (state: ${rule._state.state}, pattern: ${rule._pattern.source})`);
+        this._log(`rule: configure rule (state: ${rule._state._states}, pattern: ${rule._pattern.source})`);
         return this;
     }
     /**

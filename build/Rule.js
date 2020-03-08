@@ -1,32 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const guards_1 = require("./lib/guards");
 class Rule {
-    constructor(state, pattern, action, name = "__undefined__") {
-        if (guards_1.isRegExp(state) &&
-            guards_1.isAction(pattern) &&
-            typeof action === "string") {
-            this._state = Rule.processState("default");
-            this._pattern = Rule.processPattern(state);
-            this._action = pattern;
-            this._name = name;
-        }
-        else {
-            this._state = Rule.processState(state);
-            this._pattern = Rule.processPattern(pattern);
-            this._action = action;
-            this._name = name;
-        }
+    constructor() {
+        this._name = "unknown";
     }
-    static create(rule) {
-        const { pattern, action } = rule;
-        const state = "state" in rule ? rule.state : "default";
-        if ("name" in rule) {
-            return new Rule(state, pattern, action, name);
-        }
-        return new Rule(state, pattern, action);
+    get complete() {
+        return (typeof this._state !== "undefined" &&
+            typeof this._pattern !== "undefined" &&
+            typeof this._action !== "undefined" &&
+            typeof this._name !== "undefined");
     }
-    static processState(state) {
+    setName(name) {
+        this._name = name;
+    }
+    setAction(action) {
+        this._action = action;
+    }
+    setState(state) {
         const pieces = state.split(/\s*,\s*/g);
         const states = pieces.filter(item => !item.startsWith("#"));
         const tags = pieces
@@ -35,17 +25,20 @@ class Rule {
         if (states.length !== 1) {
             throw new Error("exactly one state required");
         }
-        return {
+        this._state = {
             _states: [states[0]],
             _tags: tags
         };
     }
-    static processPattern(pattern) {
-        let flags = "g"; /* ECMAScript <= 5 */
+    setPattern(pattern) {
+        /* ECMAScript <= 5 */
+        let flags = "g";
         try {
             const regexp = new RegExp("", "y");
-            if (typeof regexp.sticky === "boolean")
-                flags = "y"; /* ECMAScript >= 2015 */
+            if (typeof regexp.sticky === "boolean") {
+                /* ECMAScript >= 2015 */
+                flags = "y";
+            }
         }
         catch (ex) {
             /*  no-op  */
@@ -58,13 +51,13 @@ class Rule {
             flags += "i";
         if (typeof pattern.unicode === "boolean" && pattern.unicode)
             flags += "u";
-        return new RegExp(pattern.source, flags);
+        this._pattern = new RegExp(pattern.source, flags);
     }
-    mapStates(cb) {
-        return this._state._states.map(cb);
+    stateMap(mapper) {
+        return this._state._states.map(mapper);
     }
-    mapTags(cb) {
-        return this._state._tags.map(cb);
+    tagMap(mapper) {
+        return this._state._tags.map(mapper);
     }
 }
 exports.Rule = Rule;

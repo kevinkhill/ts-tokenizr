@@ -2,9 +2,9 @@ import fs from "fs";
 
 import { Tokenizr } from "../../build";
 
-export function getStatelessTokenizr(debug = false): Tokenizr {
-  const tokenizr = new Tokenizr({ debug });
+const tokenizr = new Tokenizr({ debug: false });
 
+export function getStatelessTokenizr(): Tokenizr {
   tokenizr.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, ctx => {
     ctx.accept("id");
   });
@@ -38,9 +38,7 @@ export function getStatelessTokenizr(debug = false): Tokenizr {
   return tokenizr;
 }
 
-export function getStatefulTokenizr(debug = false): Tokenizr {
-  const tokenizr = new Tokenizr({ debug });
-
+export function getStatefulTokenizr(): Tokenizr {
   tokenizr.rule("default", /[a-zA-Z]+/, (ctx /*, m */) => {
     ctx.accept("symbol");
   });

@@ -1,22 +1,13 @@
 import { Action, TaggedState } from "./types";
 
 export class Rule {
+  /**
+   * @todo this might need to be set to default in the/a constructor...
+   */
   _state!: TaggedState;
   _pattern!: RegExp;
   _action!: Action;
   _name = "unknown";
-
-  // static create(rule: DefaultRule | StateRule): Rule {
-  //   const { pattern, action } = rule;
-
-  //   const state = "state" in rule ? rule.state : "default";
-
-  //   if ("name" in rule) {
-  //     return new Rule(state, pattern, action, name);
-  //   }
-
-  //   return new Rule(state, pattern, action);
-  // }
 
   get complete(): boolean {
     return (
@@ -54,12 +45,15 @@ export class Rule {
   }
 
   setPattern(pattern: RegExp): void {
-    let flags = "g"; /* ECMAScript <= 5 */
+    /* ECMAScript <= 5 */
+    let flags = "g";
 
     try {
       const regexp = new RegExp("", "y");
-      if (typeof regexp.sticky === "boolean")
-        flags = "y"; /* ECMAScript >= 2015 */
+      if (typeof regexp.sticky === "boolean") {
+        /* ECMAScript >= 2015 */
+        flags = "y";
+      }
     } catch (ex) {
       /*  no-op  */
     }
@@ -76,34 +70,11 @@ export class Rule {
     this._pattern = new RegExp(pattern.source, flags);
   }
 
-  // constructor(
-  //   state: string | RegExp,
-  //   pattern: RegExp | Action,
-  //   action: Action | string = "unknown",
-  //   name = "unknown"
-  // ) {
-  //   if (
-  //     isRegExp(state) &&
-  //     isAction(pattern) &&
-  //     typeof action === "string"
-  //   ) {
-  //     this._state = Rule.processState("default");
-  //     this._pattern = Rule.processPattern(state);
-  //     this._action = pattern;
-  //     this._name = name;
-  //   } else {
-  //     this._state = Rule.processState(state as string);
-  //     this._pattern = Rule.processPattern(pattern as RegExp);
-  //     this._action = action as Action;
-  //     this._name = name;
-  //   }
-  // }
-
-  mapStates(cb: (state: string) => string): Array<string> {
-    return this._state._states.map(cb);
+  stateMap(mapper: (state: string) => string): Array<string> {
+    return this._state._states.map(mapper);
   }
 
-  mapTags(cb: (state: string) => string): Array<string> {
-    return this._state._tags.map(cb);
+  tagMap(mapper: (state: string) => string): Array<string> {
+    return this._state._tags.map(mapper);
   }
 }
