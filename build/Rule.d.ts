@@ -12,7 +12,6 @@ export declare class Rule {
     setAction(action: Action): void;
     setState(state: string): void;
     setPattern(pattern: RegExp): void;
-    stateMap(mapper: (state: string) => string): Array<string>;
-    tagMap(mapper: (state: string) => string): Array<string>;
+    tagsToString(): string;
 }
 //# sourceMappingURL=Rule.d.ts.map

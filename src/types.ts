@@ -1,17 +1,35 @@
 import { ActionContext } from "./ActionContext";
 import { Rule } from "./Rule";
 
+export interface TokenizrConfig {
+  debug: boolean;
+}
+
 export type Tags = Record<string, boolean>;
 
 export type Action = (
   ctx: ActionContext,
-  match?: Array<string>,
-  rule?: Rule
+  match: RegExpExecArray,
+  rule: Rule
 ) => void;
 
-export interface TokenizrConfig {
-  debug: boolean;
-}
+export type FinishAction = (ctx: ActionContext) => void;
+
+// export interface Action {
+//   (ctx: ActionContext): void;
+//   (ctx: ActionContext, match: RegExpExecArray): void;
+//   (ctx: ActionContext, match: RegExpExecArray, rule: Rule): void;
+//   (ctx?: any, match?: any, rule?: any): void;
+// }
+
+// export type Action = A1 | A2 | A3;
+// type A1 = (ctx: ActionContext) => void;
+// type A2 = (ctx: ActionContext, match: RegExpExecArray) => void;
+// type A3 = (
+//   ctx: ActionContext,
+//   match: RegExpExecArray,
+//   rule: Rule
+// ) => void;
 
 export interface DepthError {
   error: Error;
@@ -27,26 +45,6 @@ export interface TaggedState {
   _states: Array<string>;
   _tags: Array<string>;
 }
-
-export interface StateRule {
-  state: string;
-  pattern: RegExp;
-  action: Action;
-  name?: string;
-}
-
-export interface DefaultRule {
-  pattern: RegExp;
-  action: Action;
-  name?: string;
-}
-
-// export interface Rule {
-//   state: TaggedState;
-//   pattern: RegExp;
-//   action: Action;
-//   name: string;
-// }
 
 export interface Excerpt {
   prologTrunc: boolean;

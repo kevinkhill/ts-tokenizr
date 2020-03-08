@@ -9,13 +9,20 @@ export class Rule {
   _action!: Action;
   _name = "unknown";
 
-  get complete(): boolean {
-    return (
-      typeof this._state !== "undefined" &&
-      typeof this._pattern !== "undefined" &&
-      typeof this._action !== "undefined" &&
-      typeof this._name !== "undefined"
-    );
+  get hasState(): boolean {
+    return typeof this._state !== "undefined";
+  }
+
+  get hasPattern(): boolean {
+    return typeof this._pattern !== "undefined";
+  }
+
+  get hasAction(): boolean {
+    return typeof this._action !== "undefined";
+  }
+
+  get hasName(): boolean {
+    return typeof this._name !== "undefined";
   }
 
   setName(name: string): void {
@@ -70,11 +77,17 @@ export class Rule {
     this._pattern = new RegExp(pattern.source, flags);
   }
 
-  stateMap(mapper: (state: string) => string): Array<string> {
-    return this._state._states.map(mapper);
-  }
+  // stateMap(mapper: (state: string) => string): Array<string> {
+  //   return this._state._states.map(mapper);
+  // }
 
-  tagMap(mapper: (state: string) => string): Array<string> {
-    return this._state._tags.map(mapper);
+  // tagMap(mapper: (state: string) => string): Array<string> {
+  //   return this._state._tags.map(mapper);
+  // }
+
+  tagsToString(): string {
+    return Object.keys(this._state._tags)
+      .map(tag => `#${tag}`)
+      .join(" ");
   }
 }

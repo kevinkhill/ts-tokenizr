@@ -83,9 +83,9 @@ export declare class Tokenizr {
      *
      * @todo Figure this out!!!!
      */
-    rule(state: RegExp, pattern: Action, action: never, name: never): this;
-    rule(state: RegExp, pattern: Action, action: string, name: never): this;
-    rule(state: string, pattern: RegExp, action: Action, name: never): this;
+    rule(state: RegExp, pattern: Action): this;
+    rule(state: RegExp, pattern: Action, action: string): this;
+    rule(state: string, pattern: RegExp, action: Action): this;
     rule(state: string, pattern: RegExp, action: Action, name: string): this;
     /**
      * Determine and return next token
@@ -135,13 +135,9 @@ export declare class Tokenizr {
      */
     _log(msg: string): void;
     /**
-     * Determine and return the next token
+     * Determine the next token
      */
     private _tokenize;
-    /**
-     * Push a rule onto the stack
-     */
-    private _pushRule;
     /**
      * Progress the line/column counter
      */

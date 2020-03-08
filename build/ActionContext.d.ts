@@ -18,38 +18,27 @@ export declare class ActionContext {
     info(): Record<string, number>;
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     push(state: string): this;
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     pop(): this;
     /**
-     * Get / Set state in the context
-     *
-     * @todo dont like this...
+     * Pass-through to the attached tokenizer
      */
-    state(state?: string): this | string;
+    state(): string;
+    state(state: string): this;
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     tag(tag: string): this;
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     tagged(tag: string): boolean;
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     untag(tag: string): this;
     /**
@@ -66,9 +55,6 @@ export declare class ActionContext {
     ignore(): this;
     /**
      * Accept current matching as a new token
-     *
-     * @todo does`this._match[0]` always have a string if the action
-     *       is getting called from a rule that matched the pattern?
      */
     accept(type: string): this;
     accept(type: string, value: unknown): this;

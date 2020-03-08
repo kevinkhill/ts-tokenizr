@@ -1,9 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ActionContext_1 = require("./ActionContext");
-const excerpt_1 = require("./lib/excerpt");
-const guards_1 = require("./lib/guards");
-const util_1 = require("./lib/util");
+const lib_1 = require("./lib");
 const ParsingError_1 = require("./ParsingError");
 const Rule_1 = require("./Rule");
 const Token_1 = require("./Token");
@@ -62,10 +60,6 @@ class Tokenizr {
      * Provide (new) input string to tokenize
      */
     input(input) {
-        /*  sanity check arguments  */
-        if (typeof input !== "string")
-            throw new Error('parameter "input" not a String');
-        /*  reset state and store new input  */
         this.reset();
         this._input = input;
         this._len = input.length;
@@ -156,7 +150,7 @@ class Tokenizr {
         else {
             rule.setPattern(state);
         }
-        if (guards_1.isRegExp(pattern)) {
+        if (lib_1.isRegExp(pattern)) {
             rule.setPattern(pattern);
         }
         else {
@@ -171,7 +165,9 @@ class Tokenizr {
         if (typeof name === "string") {
             rule.setName(name);
         }
-        return this._pushRule(rule);
+        this._rules.push(rule);
+        this._log(`rule: configure rule (state: ${rule._state._states}, pattern: ${rule._pattern.source})`);
+        return this;
     }
     /**
      * Determine and return next token
@@ -343,14 +339,14 @@ class Tokenizr {
         }
     }
     /**
-     * Determine and return the next token
+     * Determine the next token
      */
     _tokenize() {
         /*  helper function for finishing parsing  */
         const finish = () => {
             if (!this._eof) {
                 if (this._finish !== null) {
-                    this._finish.call(this._ctx, this._ctx);
+                    this._finish.call(this._ctx, this._ctx, [], null);
                 }
                 this._eof = true;
                 this._pending.push(new Token_1.Token("EOF", "", "", this._pos, this._line, this._column));
@@ -367,7 +363,7 @@ class Tokenizr {
             continued = false;
             /*  some optional debugging context  */
             if (this.config.debug) {
-                const e = excerpt_1.excerpt(this._input, this._pos);
+                const e = lib_1.excerpt(this._input, this._pos);
                 const tags = Object.keys(this._tag)
                     .map(tag => `#${tag}`)
                     .join(" ");
@@ -379,21 +375,22 @@ class Tokenizr {
             }
             /*  iterate over all rules...  */
             for (let i = 0; i < this._rules.length; i++) {
+                const thisRule = this._rules[i];
                 if (this.config.debug) {
-                    this._log(`  RULE: state(s): <${util_1.stringifyTags(this._rules[i]._state._states)}>, pattern: ${this._rules[i]._pattern.source}`);
+                    this._log(`  RULE: state(s): <${thisRule.tagsToString()}>, pattern: ${thisRule._pattern.source}`);
                 }
                 /*  one of rule's states (and all of its tags) has to match  */
                 //@TODO state is still not working right...
                 //@TODO state can be an array...
                 let matches = false;
-                const states = this._rules[i]._state._states;
+                const states = thisRule._state._states;
                 let idx = states.indexOf("*");
                 if (idx < 0) {
                     idx = states.indexOf(this._state[this._state.length - 1]);
                 }
                 if (idx >= 0) {
                     matches = true;
-                    let tags = this._rules[i]._state[idx].tags;
+                    let tags = thisRule._state[idx].tags;
                     tags = tags.filter(tag => !this._tag[tag]);
                     if (tags.length > 0) {
                         matches = false;
@@ -402,11 +399,10 @@ class Tokenizr {
                 if (!matches)
                     continue;
                 /*  match pattern at the last position  */
-                this._rules[i]._pattern.lastIndex = this._pos;
-                let found = this._rules[i]._pattern.exec(this._input);
-                this._rules[i]._pattern.lastIndex = this._pos;
-                if ((found = this._rules[i]._pattern.exec(this._input)) !==
-                    null &&
+                thisRule._pattern.lastIndex = this._pos;
+                let found = thisRule._pattern.exec(this._input);
+                thisRule._pattern.lastIndex = this._pos;
+                if ((found = thisRule._pattern.exec(this._input)) !== null &&
                     found.index === this._pos) {
                     if (this.config.debug)
                         this._log("    MATCHED: " + JSON.stringify(found));
@@ -417,11 +413,11 @@ class Tokenizr {
                     this._ctx._reject = false;
                     this._ctx._ignore = false;
                     if (this._before !== null) {
-                        this._before.call(this._ctx, this._ctx, found, this._rules[i]);
+                        this._before.call(this._ctx, this._ctx, found, thisRule);
                     }
-                    this._rules[i]._action.call(this._ctx, this._ctx, found, this._rules[i]);
+                    thisRule._action.call(this._ctx, this._ctx, found, thisRule);
                     if (this._after !== null) {
-                        this._after.call(this._ctx, this._ctx, found, this._rules[i]);
+                        this._after.call(this._ctx, this._ctx, found, thisRule);
                     }
                     /*  reject current action, continue matching  */
                     if (this._ctx._reject) {
@@ -434,8 +430,8 @@ class Tokenizr {
                     }
                     /*  ignore token  */
                     if (this._ctx._ignore) {
-                        this._progress(this._pos, this._rules[i]._pattern.lastIndex);
-                        this._pos = this._rules[i]._pattern.lastIndex;
+                        this._progress(this._pos, thisRule._pattern.lastIndex);
+                        this._pos = thisRule._pattern.lastIndex;
                         if (this._pos >= this._len) {
                             finish();
                             return;
@@ -445,28 +441,20 @@ class Tokenizr {
                     }
                     /*  accept token(s)  */
                     if (this._pending.length > 0) {
-                        this._progress(this._pos, this._rules[i]._pattern.lastIndex);
-                        this._pos = this._rules[i]._pattern.lastIndex;
+                        this._progress(this._pos, thisRule._pattern.lastIndex);
+                        this._pos = thisRule._pattern.lastIndex;
                         if (this._pos >= this._len) {
                             finish();
                         }
                         return;
                     }
                     /*  nothing worked  */
-                    throw new Error(`action of pattern "${this._rules[i]._pattern.source}" neither rejected nor accepted any token(s)`);
+                    throw new Error(`action of pattern "${thisRule._pattern.source}" neither rejected nor accepted any token(s)`);
                 }
             }
         }
         /*  no pattern matched at all  */
         throw this.error("token not recognized");
-    }
-    /**
-     * Push a rule onto the stack
-     */
-    _pushRule(rule) {
-        this._rules.push(rule);
-        this._log(`rule: configure rule (state: ${rule._state._states}, pattern: ${rule._pattern.source})`);
-        return this;
     }
     /**
      * Progress the line/column counter

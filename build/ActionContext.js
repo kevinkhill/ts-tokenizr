@@ -31,8 +31,6 @@ class ActionContext {
     }
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     push(state) {
         this._tokenizr.push(state);
@@ -40,18 +38,11 @@ class ActionContext {
     }
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     pop() {
         this._tokenizr.pop();
         return this;
     }
-    /**
-     * Get / Set state in the context
-     *
-     * @todo dont like this...
-     */
     state(state) {
         if (typeof state === "undefined") {
             return this._tokenizr.state();
@@ -61,8 +52,6 @@ class ActionContext {
     }
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     tag(tag) {
         this._tokenizr.tag(tag);
@@ -70,16 +59,12 @@ class ActionContext {
     }
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     tagged(tag) {
         return this._tokenizr.tagged(tag);
     }
     /**
      * Pass-through to the attached tokenizer
-     *
-     * @inheritdoc
      */
     untag(tag) {
         this._tokenizr.untag(tag);
@@ -110,13 +95,10 @@ class ActionContext {
         return this;
     }
     accept(type, value) {
-        // I believe that since we are accepting, that it is safe to
-        // assume that this._match[0] is a string, so we'll check if
-        // this._match is not null, and error if so. x_x
         if (this._match === null) {
             throw Error("this._match was null when trying to .accept()");
         }
-        if (arguments.length < 2) {
+        if (typeof value === "undefined") {
             // eslint-disable-next-line no-param-reassign
             value = this._match[0];
         }

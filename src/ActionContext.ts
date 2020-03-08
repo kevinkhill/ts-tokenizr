@@ -44,8 +44,6 @@ export class ActionContext {
 
   /**
    * Pass-through to the attached tokenizer
-   *
-   * @inheritdoc
    */
   push(state: string): this {
     this._tokenizr.push(state);
@@ -55,8 +53,6 @@ export class ActionContext {
 
   /**
    * Pass-through to the attached tokenizer
-   *
-   * @inheritdoc
    */
   pop(): this {
     this._tokenizr.pop();
@@ -65,10 +61,10 @@ export class ActionContext {
   }
 
   /**
-   * Get / Set state in the context
-   *
-   * @todo dont like this...
+   * Pass-through to the attached tokenizer
    */
+  state(): string;
+  state(state: string): this;
   state(state?: string): this | string {
     if (typeof state === "undefined") {
       return this._tokenizr.state();
@@ -81,8 +77,6 @@ export class ActionContext {
 
   /**
    * Pass-through to the attached tokenizer
-   *
-   * @inheritdoc
    */
   tag(tag: string): this {
     this._tokenizr.tag(tag);
@@ -92,8 +86,6 @@ export class ActionContext {
 
   /**
    * Pass-through to the attached tokenizer
-   *
-   * @inheritdoc
    */
   tagged(tag: string): boolean {
     return this._tokenizr.tagged(tag);
@@ -101,8 +93,6 @@ export class ActionContext {
 
   /**
    * Pass-through to the attached tokenizer
-   *
-   * @inheritdoc
    */
   untag(tag: string): this {
     this._tokenizr.untag(tag);
@@ -142,21 +132,15 @@ export class ActionContext {
 
   /**
    * Accept current matching as a new token
-   *
-   * @todo does`this._match[0]` always have a string if the action
-   *       is getting called from a rule that matched the pattern?
    */
   accept(type: string): this;
   accept(type: string, value: unknown): this;
   accept(type: string, value?: unknown): this {
-    // I believe that since we are accepting, that it is safe to
-    // assume that this._match[0] is a string, so we'll check if
-    // this._match is not null, and error if so. x_x
     if (this._match === null) {
       throw Error("this._match was null when trying to .accept()");
     }
 
-    if (arguments.length < 2) {
+    if (typeof value === "undefined") {
       // eslint-disable-next-line no-param-reassign
       value = this._match[0];
     }

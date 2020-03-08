@@ -53,11 +53,16 @@ class Rule {
             flags += "u";
         this._pattern = new RegExp(pattern.source, flags);
     }
-    stateMap(mapper) {
-        return this._state._states.map(mapper);
-    }
-    tagMap(mapper) {
-        return this._state._tags.map(mapper);
+    // stateMap(mapper: (state: string) => string): Array<string> {
+    //   return this._state._states.map(mapper);
+    // }
+    // tagMap(mapper: (state: string) => string): Array<string> {
+    //   return this._state._tags.map(mapper);
+    // }
+    tagsToString() {
+        return Object.keys(this._state._tags)
+            .map(tag => `#${tag}`)
+            .join(" ");
     }
 }
 exports.Rule = Rule;
