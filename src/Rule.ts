@@ -1,12 +1,15 @@
-import { Action, TaggedState } from "./types";
+import { Action } from "./types";
 
 export class Rule {
   /**
    * @todo this might need to be set to default in the/a constructor...
    */
-  _state!: TaggedState;
+  // _state!: TaggedState;
+  // _states!: Array<string>;
   _pattern!: RegExp;
   _action!: Action;
+  _state = "default";
+  _tags = [];
   _name = "unknown";
 
   get hasState(): boolean {
@@ -33,7 +36,31 @@ export class Rule {
     this._action = action;
   }
 
-  setState(state: string): void {
+  /**
+   * Set the state (and tags) for the Rule
+   *
+   * @example
+   * setState("*")
+   * setState("default")
+   * setState("comment #open")
+   * setState("custom #foo #bar #baz")
+   */
+  setState(taggedState: string): void {
+    const pieces = taggedState.split(/\s*,\s*/g);
+
+    const state = pieces.filter(item => !item.startsWith("#"));
+
+    if (state.length !== 1) {
+      throw new Error("exactly one state required");
+    }
+
+    this._state = state[0];
+    this._tags = pieces
+      .filter(item => item.startsWith("#"))
+      .map(tag => tag.replace("#", ""));
+  }
+
+  setTags(state: string): void {
     const pieces = state.split(/\s*,\s*/g);
 
     const states = pieces.filter(item => !item.startsWith("#"));

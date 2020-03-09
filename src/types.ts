@@ -36,15 +36,15 @@ export interface DepthError {
   depth: number;
 }
 
-// export interface TaggedState {
-//   state: string;
-//   tags: Array<string>;
-// }
-
 export interface TaggedState {
-  _states: Array<string>;
-  _tags: Array<string>;
+  state: string;
+  tags: Array<string>;
 }
+
+// export interface TaggedState {
+//   _states: Array<string>;
+//   _tags: Array<string>;
+// }
 
 export interface Excerpt {
   prologTrunc: boolean;
