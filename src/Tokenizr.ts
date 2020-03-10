@@ -202,8 +202,6 @@ export class Tokenizr {
 
   /**
    * Configure a tokenization rule
-   *
-   * @todo Figure this out!!!!
    */
   rule(state: RegExp, pattern: Action): this;
   rule(state: RegExp, pattern: Action, action: string): this;
@@ -248,9 +246,7 @@ export class Tokenizr {
 
     if (this.config.debug) {
       this._log(
-        `rule: configure rule (state: ${rule._state._states.join(
-          " "
-        )}, pattern: ${rule._pattern.source})`
+        `rule: configure rule (state: ${rule._state}, pattern: ${rule._pattern.source})`
       );
     }
 

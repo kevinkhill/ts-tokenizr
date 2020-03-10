@@ -8,7 +8,7 @@ export class Rule {
   // _states!: Array<string>;
   _pattern!: RegExp;
   _action!: Action;
-  _state = "default";
+  _state!: string;
   _tags: Array<string> = [];
   _name = "unknown";
 
@@ -26,6 +26,14 @@ export class Rule {
 
   get hasName(): boolean {
     return typeof this._name !== "undefined";
+  }
+
+  getTaggedState(): string {
+    return `${this._state} ${this.tagsToString()}`;
+  }
+
+  tagsToString(): string {
+    return this._tags.map(tag => `#${tag}`).join(" ");
   }
 
   setName(name: string): void {
@@ -55,12 +63,9 @@ export class Rule {
     }
 
     this._state = state[0];
-
-    this.setTags(
-      pieces
-        .filter(item => item.startsWith("#"))
-        .map(tag => tag.replace("#", ""))
-    );
+    this._tags = pieces
+      .filter(item => item.startsWith("#"))
+      .map(tag => tag.replace("#", ""));
   }
 
   setPattern(pattern: RegExp): void {
@@ -87,17 +92,5 @@ export class Rule {
       flags += "u";
 
     this._pattern = new RegExp(pattern.source, flags);
-  }
-
-  getTaggedState(): string {
-    return `${this._state} ${this.tagsToString()}`;
-  }
-
-  tagsToString(): string {
-    return this._tags.map(tag => `#${tag}`).join(" ");
-  }
-
-  private setTags(tags: Array<string>): void {
-    this._tags = tags;
   }
 }

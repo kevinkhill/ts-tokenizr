@@ -17,13 +17,6 @@ describe("Rule.setState()", () => {
     expect(rule._tags).toContain("foobar");
   });
 
-  test(`should correctly parse "default"`, () => {
-    rule.setState("default");
-
-    expect(rule._state).toBe("default");
-    expect(rule._tags).toHaveLength(0);
-  });
-
   test(`should correctly parse "foo #bar #baz"`, () => {
     const testString = "foo #bar #baz";
 
@@ -35,9 +28,15 @@ describe("Rule.setState()", () => {
     expect(rule._tags).toContain("baz");
   });
 
-  test(`should error if input has more than one state`, () => {
+  test(`should throw when parsing finds more/less than one state`, () => {
+    // Two states
     expect(() => {
       rule.setState("foo bar #baz");
+    }).toThrow();
+
+    // No states
+    expect(() => {
+      rule.setState("#foo #bar #baz");
     }).toThrow();
   });
 });
