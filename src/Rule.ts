@@ -9,7 +9,7 @@ export class Rule {
   _pattern!: RegExp;
   _action!: Action;
   _state = "default";
-  _tags = [];
+  _tags: Array<string> = [];
   _name = "unknown";
 
   get hasState(): boolean {
@@ -45,8 +45,8 @@ export class Rule {
    * setState("comment #open")
    * setState("custom #foo #bar #baz")
    */
-  setState(taggedState: string): void {
-    const pieces = taggedState.split(/\s*,\s*/g);
+  setState(input: string): void {
+    const pieces = input.split(/\s+/);
 
     const state = pieces.filter(item => !item.startsWith("#"));
 
@@ -55,27 +55,16 @@ export class Rule {
     }
 
     this._state = state[0];
-    this._tags = pieces
-      .filter(item => item.startsWith("#"))
-      .map(tag => tag.replace("#", ""));
+
+    this.setTags(
+      pieces
+        .filter(item => item.startsWith("#"))
+        .map(tag => tag.replace("#", ""))
+    );
   }
 
-  setTags(state: string): void {
-    const pieces = state.split(/\s*,\s*/g);
-
-    const states = pieces.filter(item => !item.startsWith("#"));
-    const tags = pieces
-      .filter(item => item.startsWith("#"))
-      .map(tag => tag.replace("#", ""));
-
-    if (states.length !== 1) {
-      throw new Error("exactly one state required");
-    }
-
-    this._state = {
-      _states: [states[0]],
-      _tags: tags
-    };
+  private setTags(tags: Array<string>): void {
+    this._tags = tags;
   }
 
   setPattern(pattern: RegExp): void {
@@ -113,8 +102,6 @@ export class Rule {
   // }
 
   tagsToString(): string {
-    return Object.keys(this._state._tags)
-      .map(tag => `#${tag}`)
-      .join(" ");
+    return this._tags.map(tag => `#${tag}`).join(" ");
   }
 }
