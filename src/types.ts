@@ -8,9 +8,9 @@ export interface TokenizrConfig {
 export type Tags = Record<string, boolean>;
 
 export type Action = (
-  ctx: ActionContext,
-  match: RegExpExecArray,
-  rule: Rule
+  ctx?: ActionContext,
+  match?: RegExpExecArray,
+  rule?: Rule
 ) => void;
 
 export type FinishAction = (ctx: ActionContext) => void;

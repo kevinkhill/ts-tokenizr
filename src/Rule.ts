@@ -63,10 +63,6 @@ export class Rule {
     );
   }
 
-  private setTags(tags: Array<string>): void {
-    this._tags = tags;
-  }
-
   setPattern(pattern: RegExp): void {
     /* ECMAScript <= 5 */
     let flags = "g";
@@ -93,15 +89,15 @@ export class Rule {
     this._pattern = new RegExp(pattern.source, flags);
   }
 
-  // stateMap(mapper: (state: string) => string): Array<string> {
-  //   return this._state._states.map(mapper);
-  // }
-
-  // tagMap(mapper: (state: string) => string): Array<string> {
-  //   return this._state._tags.map(mapper);
-  // }
+  getTaggedState(): string {
+    return `${this._state} ${this.tagsToString()}`;
+  }
 
   tagsToString(): string {
     return this._tags.map(tag => `#${tag}`).join(" ");
+  }
+
+  private setTags(tags: Array<string>): void {
+    this._tags = tags;
   }
 }
