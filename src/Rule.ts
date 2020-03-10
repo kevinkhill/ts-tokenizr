@@ -12,6 +12,8 @@ export class Rule {
   _tags: Array<string> = [];
   _name = "unknown";
 
+  stringify: Record<string, Function> = {};
+
   get hasState(): boolean {
     return typeof this._state !== "undefined";
   }
@@ -28,13 +30,25 @@ export class Rule {
     return typeof this._name !== "undefined";
   }
 
-  getTaggedState(): string {
-    return `${this._state} ${this.tagsToString()}`;
+  // get taggedState(): string {
+  //   return `${this._state} ${this.tagsToString()}`;
+  // }
+
+  constructor() {
+    this.stringify.tags = () =>
+      this._tags.map(tag => `#${tag}`).join(" ");
   }
 
-  tagsToString(): string {
-    return this._tags.map(tag => `#${tag}`).join(" ");
+  /**
+   * Test a string against the rule
+   */
+  test(input: string): RegExpExecArray | null {
+    return this._pattern.exec(input);
   }
+
+  // tagsToString(): string {
+  //   return this._tags.map(tag => `#${tag}`).join(" ");
+  // }
 
   setName(name: string): void {
     this._name = name;

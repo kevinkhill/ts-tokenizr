@@ -1,5 +1,5 @@
 import { ActionContext } from "./ActionContext";
-import { excerpt, isRegExp } from "./lib";
+import { arrayEquals, excerpt, isRegExp, last } from "./lib";
 import { ParsingError } from "./ParsingError";
 import { Rule } from "./Rule";
 import { Token } from "./Token";
@@ -463,7 +463,6 @@ export class Tokenizr {
       } catch (error) {
         depths.push({ error, depth: this.depth() });
         this.rollback();
-
         this._log(`EXCEPTION: ${error.toString()}`);
         continue;
       }
@@ -542,33 +541,34 @@ export class Tokenizr {
 
         if (this.config.debug) {
           this._log(
-            `  RULE: state(s): <${thisRule.tagsToString()}>, pattern: ${
+            `  RULE: state(s): <${thisRule.stringify.tags()}>, pattern: ${
               thisRule._pattern.source
             }`
           );
         }
 
         /*  one of rule's states (and all of its tags) has to match  */
-        //@TODO state is still not working right...
-        //@TODO state can be an array...
         let matches = false;
-        const states = thisRule._state._states;
-        let idx = states.indexOf("*");
 
-        if (idx < 0) {
-          idx = states.indexOf(this._state[this._state.length - 1]);
+        if (thisRule._state !== "*") {
+          if (thisRule._state === last(this._state)) {
+            matches = true;
+          }
         }
 
-        if (idx >= 0) {
-          matches = true;
-          let tags = thisRule._state[idx]._state._tags;
-          tags = tags.filter(tag => !this._tag[tag]);
+        /* state matched so we must test the tags */
+        if (matches) {
+          const tagsMatch = arrayEquals(
+            Object.keys(this._tag),
+            thisRule._tags
+          );
 
-          if (tags.length > 0) {
+          if (tagsMatch !== true) {
             matches = false;
           }
         }
 
+        /* all good, keep going */
         if (!matches) continue;
 
         /*  match pattern at the last position  */
