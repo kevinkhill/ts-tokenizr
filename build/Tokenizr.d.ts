@@ -2,7 +2,7 @@ import { ActionContext } from "./ActionContext";
 import { ParsingError } from "./ParsingError";
 import { Rule } from "./Rule";
 import { Token } from "./Token";
-import { Action, Tags, TokenizrConfig } from "./types";
+import { Action, FinishAction, Tags, TokenizrConfig } from "./types";
 export declare class Tokenizr {
     static readonly defaults: {
         debug: boolean;
@@ -20,7 +20,7 @@ export declare class Tokenizr {
     _pending: Array<Token>;
     _after: Action | null;
     _before: Action | null;
-    _finish: Action | null;
+    _finish: FinishAction | null;
     _tag: Tags;
     _state: Array<string>;
     _transaction: Array<Array<Token>>;
@@ -77,11 +77,9 @@ export declare class Tokenizr {
     /**
      * Configure a tokenization finish callback
      */
-    finish(action: Action): this;
+    finish(action: FinishAction): this;
     /**
      * Configure a tokenization rule
-     *
-     * @todo Figure this out!!!!
      */
     rule(state: RegExp, pattern: Action): this;
     rule(state: RegExp, pattern: Action, action: string): this;

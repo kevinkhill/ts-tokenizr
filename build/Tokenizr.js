@@ -60,6 +60,7 @@ class Tokenizr {
      * Provide (new) input string to tokenize
      */
     input(input) {
+        lib_1.assertIsString(input);
         this.reset();
         this._input = input;
         this._len = input.length;
@@ -166,7 +167,9 @@ class Tokenizr {
             rule.setName(name);
         }
         this._rules.push(rule);
-        this._log(`rule: configure rule (state: ${rule._state._states}, pattern: ${rule._pattern.source})`);
+        if (this.config.debug) {
+            this._log(`rule: configure rule (state: ${rule._state}, pattern: ${rule._pattern.source})`);
+        }
         return this;
     }
     /**
@@ -346,7 +349,7 @@ class Tokenizr {
         const finish = () => {
             if (!this._eof) {
                 if (this._finish !== null) {
-                    this._finish.call(this._ctx, this._ctx, [], null);
+                    this._finish.call(this._ctx, this._ctx);
                 }
                 this._eof = true;
                 this._pending.push(new Token_1.Token("EOF", "", "", this._pos, this._line, this._column));
@@ -377,25 +380,23 @@ class Tokenizr {
             for (let i = 0; i < this._rules.length; i++) {
                 const thisRule = this._rules[i];
                 if (this.config.debug) {
-                    this._log(`  RULE: state(s): <${thisRule.tagsToString()}>, pattern: ${thisRule._pattern.source}`);
+                    this._log(`  RULE: state(s): <${thisRule.stringify.tags()}>, pattern: ${thisRule._pattern.source}`);
                 }
                 /*  one of rule's states (and all of its tags) has to match  */
-                //@TODO state is still not working right...
-                //@TODO state can be an array...
                 let matches = false;
-                const states = thisRule._state._states;
-                let idx = states.indexOf("*");
-                if (idx < 0) {
-                    idx = states.indexOf(this._state[this._state.length - 1]);
+                if (thisRule._state !== "*") {
+                    if (thisRule._state === lib_1.last(this._state)) {
+                        matches = true;
+                    }
                 }
-                if (idx >= 0) {
-                    matches = true;
-                    let tags = thisRule._state[idx].tags;
-                    tags = tags.filter(tag => !this._tag[tag]);
-                    if (tags.length > 0) {
+                /* state matched so we must test the tags */
+                if (matches) {
+                    const tagsMatch = lib_1.arrayEquals(Object.keys(this._tag), thisRule._tags);
+                    if (tagsMatch !== true) {
                         matches = false;
                     }
                 }
+                /* all good, keep going */
                 if (!matches)
                     continue;
                 /*  match pattern at the last position  */

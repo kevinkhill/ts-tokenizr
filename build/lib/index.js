@@ -1,6 +1,12 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
+var arrayEquals_1 = require("./arrayEquals");
+exports.arrayEquals = arrayEquals_1.arrayEquals;
 var excerpt_1 = require("./excerpt");
 exports.excerpt = excerpt_1.excerpt;
-var guards_1 = require("./guards");
-exports.isRegExp = guards_1.isRegExp;
+__export(require("./guards"));
+var last_1 = require("./last");
+exports.last = last_1.last;

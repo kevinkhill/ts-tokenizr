@@ -1,7 +1,9 @@
-import { getStatefulTokenizr } from "../testHelpers";
+import { getStatefulTokenizr, readfile } from "../testHelpers";
 
 describe("ts-tokenizr library, with states", () => {
   const tokenizr = getStatefulTokenizr();
+
+  tokenizr.input(readfile("sample.cfg"));
 
   test("should have the expected functionality", () => {
     let tokens;

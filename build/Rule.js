@@ -1,34 +1,67 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Rule {
+    // get taggedState(): string {
+    //   return `${this._state} ${this.tagsToString()}`;
+    // }
     constructor() {
+        /**
+         * @todo this might need to be set to default in the/a constructor...
+         */
+        // _state!: TaggedState;
+        // _states!: Array<string>;
+        this._state = "default";
+        this._tags = [];
         this._name = "unknown";
+        this.stringify = {};
+        this.stringify.tags = () => this._tags.map(tag => `#${tag}`).join(" ");
     }
-    get complete() {
-        return (typeof this._state !== "undefined" &&
-            typeof this._pattern !== "undefined" &&
-            typeof this._action !== "undefined" &&
-            typeof this._name !== "undefined");
+    get hasState() {
+        return typeof this._state !== "undefined";
     }
+    get hasPattern() {
+        return typeof this._pattern !== "undefined";
+    }
+    get hasAction() {
+        return typeof this._action !== "undefined";
+    }
+    get hasName() {
+        return typeof this._name !== "undefined";
+    }
+    /**
+     * Test a string against the rule
+     */
+    test(input) {
+        return this._pattern.exec(input);
+    }
+    // tagsToString(): string {
+    //   return this._tags.map(tag => `#${tag}`).join(" ");
+    // }
     setName(name) {
         this._name = name;
     }
     setAction(action) {
         this._action = action;
     }
-    setState(state) {
-        const pieces = state.split(/\s*,\s*/g);
-        const states = pieces.filter(item => !item.startsWith("#"));
-        const tags = pieces
-            .filter(item => item.startsWith("#"))
-            .map(tag => tag.replace("#", ""));
-        if (states.length !== 1) {
+    /**
+     * Set the state (and tags) for the Rule
+     *
+     * @example
+     * setState("*")
+     * setState("default")
+     * setState("comment #open")
+     * setState("custom #foo #bar #baz")
+     */
+    setState(input) {
+        const pieces = input.split(/\s+/);
+        const state = pieces.filter(item => !item.startsWith("#"));
+        if (state.length !== 1) {
             throw new Error("exactly one state required");
         }
-        this._state = {
-            _states: [states[0]],
-            _tags: tags
-        };
+        this._state = state[0];
+        this._tags = pieces
+            .filter(item => item.startsWith("#"))
+            .map(tag => tag.replace("#", ""));
     }
     setPattern(pattern) {
         /* ECMAScript <= 5 */
@@ -52,17 +85,6 @@ class Rule {
         if (typeof pattern.unicode === "boolean" && pattern.unicode)
             flags += "u";
         this._pattern = new RegExp(pattern.source, flags);
-    }
-    // stateMap(mapper: (state: string) => string): Array<string> {
-    //   return this._state._states.map(mapper);
-    // }
-    // tagMap(mapper: (state: string) => string): Array<string> {
-    //   return this._state._tags.map(mapper);
-    // }
-    tagsToString() {
-        return Object.keys(this._state._tags)
-            .map(tag => `#${tag}`)
-            .join(" ");
     }
 }
 exports.Rule = Rule;

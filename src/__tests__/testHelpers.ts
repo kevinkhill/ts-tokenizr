@@ -3,7 +3,12 @@ import path from "path";
 
 import { Tokenizr } from "../Tokenizr";
 
-const tokenizr = new Tokenizr({ debug: false });
+export function readfile(filename): string {
+  // eslint-disable-next-line no-sync
+  return fs.readFileSync(path.join(__dirname, filename), "utf8");
+}
+
+const tokenizr = new Tokenizr();
 
 export function getStatelessTokenizr(): Tokenizr {
   tokenizr.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, ctx => {
@@ -29,15 +34,6 @@ export function getStatelessTokenizr(): Tokenizr {
   tokenizr.rule(/./, ctx => {
     ctx.accept("char");
   });
-
-  // eslint-disable-next-line no-sync
-  const cfg = fs.readFileSync(
-    path.join(__dirname, "sample.cfg"),
-    "utf8"
-  );
-
-  tokenizr.input(cfg);
-  // tokenizr.debug(debug);
 
   return tokenizr;
 }
@@ -78,9 +74,6 @@ export function getStatefulTokenizr(): Tokenizr {
   tokenizr.rule("default", /\s*,\s*/, ctx => {
     ctx.ignore();
   });
-
-  tokenizr.input('foo42,\n "bar baz",\n quux/* */');
-  // tokenizr.debug(debug);
 
   return tokenizr;
 }

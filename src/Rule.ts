@@ -6,9 +6,9 @@ export class Rule {
    */
   // _state!: TaggedState;
   // _states!: Array<string>;
+  _state = "default";
   _pattern!: RegExp;
   _action!: Action;
-  _state!: string;
   _tags: Array<string> = [];
   _name = "unknown";
 
@@ -68,6 +68,7 @@ export class Rule {
    * setState("custom #foo #bar #baz")
    */
   setState(input: string): void {
+    // @TODO I MESSED THIS UP!!!!
     const pieces = input.split(/\s+/);
 
     const state = pieces.filter(item => !item.startsWith("#"));

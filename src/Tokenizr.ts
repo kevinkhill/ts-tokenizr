@@ -1,5 +1,11 @@
 import { ActionContext } from "./ActionContext";
-import { arrayEquals, excerpt, isRegExp, last } from "./lib";
+import {
+  arrayEquals,
+  assertIsString,
+  excerpt,
+  isRegExp,
+  last
+} from "./lib";
 import { ParsingError } from "./ParsingError";
 import { Rule } from "./Rule";
 import { Token } from "./Token";
@@ -87,6 +93,8 @@ export class Tokenizr {
    * Provide (new) input string to tokenize
    */
   input(input: string): this {
+    assertIsString(input);
+
     this.reset();
 
     this._input = input;
