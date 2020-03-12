@@ -210,6 +210,21 @@ export class Tokenizr {
 
   /**
    * Configure a tokenization rule
+   *
+   * Configure a token matching rule which executes its action if the
+   * current tokenization state is one of the states
+   * (and all of the currently set tags) in state (by default the rule
+   * matches all states if state is not specified) and the next input
+   * characters match against the pattern. The exact syntax of state is
+   * <state>[ #<tag> #<tag> ...][, <state>[ #<tag> #<tag> ...], ...]
+   *
+   * For example, it is one or more comma-separated state matches
+   * (OR-combined) and each state match has exactly one state and zero or more space-separated tags
+   * (AND-combined).
+   *
+   * The ctx argument provides a context object for token
+   * repeating/rejecting/ignoring/accepting and the match argument is
+   * the result of the underlying RegExp#exec call.
    */
   rule(state: RegExp, pattern: Action): this;
   rule(state: RegExp, pattern: Action, action: string): this;
