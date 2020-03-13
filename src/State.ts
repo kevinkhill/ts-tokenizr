@@ -1,65 +1,72 @@
-export function makeState(stateDef: string): TaggedState {
-  return new TaggedState(stateDef);
-}
+import { arrayEquals } from "./lib";
 
-export class TaggedState {
-  static _states: Array<string>;
+export class State {
+  static default(): State {
+    return new State("default");
+  }
 
-  // stringify(): string {
-  //   let output = this._states;
+  static create(taggedState: string): State {
+    return new State(taggedState);
+  }
 
-  //   if (state.tags.length > 0) {
-  //     output += " " + state.tags.map(tag => `#${tag}`).join(" ");
-  //   }
-
-  //   return output;
-  // }
-
+  _name = "default";
   _tags: Array<string> = [];
-  _states: Array<string> = ["default"];
 
   constructor(stateDef: string) {
-    const pieces = stateDef.split(/\s*,\s*/g);
+    const pieces = stateDef.split(/\s+/g);
     const states = pieces.filter(p => !p.startsWith("#"));
-
-    this._tags = pieces
-      .filter(piece => piece.startsWith("#"))
-      .map(tag => tag.replace("#", ""));
 
     if (states.length !== 1) {
       throw new Error("exactly one state required");
     }
-  }
 
-  hasTags(): boolean {
-    return this._tags.length > 0;
+    this._name = states[0];
+    this._tags = pieces
+      .filter(piece => piece.startsWith("#"))
+      .map(tag => tag.replace("#", ""));
   }
 
   toString(): string {
-    return `${this._states.join(", ")} ${this.tagsToString()}`;
+    return `${this._name} ${this.stringifyTags()}`;
   }
 
-  tagsToString(): string {
+  stringifyTags(): string {
     return this._tags.map(tag => `#${tag}`).join(" ");
   }
 
-  pushState(state: string): this {
-    this._states.push(state);
-
-    return this;
+  /**
+   * Test if this state's name mathces the provided name
+   */
+  is(state: string): boolean {
+    return this._name === state;
   }
 
-  popState(): string | undefined {
-    return this._states.pop();
+  /**
+   * Test if two State objects match
+   */
+  matches(state: State): boolean {
+    return (
+      this._name === state._name && arrayEquals(this._tags, state._tags)
+    );
   }
 
-  pushTag(tag: string): this {
+  hasTag(tag: string): boolean {
+    return this._tags.includes(tag);
+  }
+
+  isTagged(): boolean {
+    return this._tags.length > 0;
+  }
+
+  tag(tag: string): this {
     this._tags.push(tag);
 
     return this;
   }
 
-  popTag(): string | undefined {
-    return this._tags.pop();
+  unTag(tag: string): this {
+    delete this._tags[this._tags.indexOf(tag)];
+
+    return this;
   }
 }

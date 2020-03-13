@@ -1,22 +1,14 @@
+import { State } from "./State";
 import { Action } from "./types";
 
 export class Rule {
-  /**
-   * @todo this might need to be set to default in the/a constructor...
-   */
-  // _state!: TaggedState;
-  // _states!: Array<string>;
-  _state = "default";
-  _pattern!: RegExp;
   _action!: Action;
-  _tags: Array<string> = [];
   _name = "unknown";
+  _pattern!: RegExp;
+  _states: Array<State> = [];
+  _tags: Array<string> = [];
 
   stringify: Record<string, Function> = {};
-
-  get hasState(): boolean {
-    return typeof this._state !== "undefined";
-  }
 
   get hasPattern(): boolean {
     return typeof this._pattern !== "undefined";
@@ -30,13 +22,21 @@ export class Rule {
     return typeof this._name !== "undefined";
   }
 
-  // get taggedState(): string {
+  // get State(): string {
   //   return `${this._state} ${this.tagsToString()}`;
   // }
 
   constructor() {
     this.stringify.tags = () =>
       this._tags.map(tag => `#${tag}`).join(" ");
+  }
+
+  hasState(state: string): boolean {
+    return this._states.filter(s => s.is(state)).length > 0;
+  }
+
+  getState(state: string): State | undefined {
+    return this._states.find(s => s.is(state));
   }
 
   /**
@@ -50,12 +50,16 @@ export class Rule {
   //   return this._tags.map(tag => `#${tag}`).join(" ");
   // }
 
-  setName(name: string): void {
+  setName(name: string): this {
     this._name = name;
+
+    return this;
   }
 
-  setAction(action: Action): void {
+  setAction(action: Action): this {
     this._action = action;
+
+    return this;
   }
 
   /**
@@ -65,25 +69,32 @@ export class Rule {
    * setState("*")
    * setState("default")
    * setState("comment #open")
-   * setState("custom #foo #bar #baz")
+   * setState("foo #bar, baz #qux")
    */
-  setState(input: string): void {
-    // @TODO I MESSED THIS UP!!!!
-    const pieces = input.split(/\s+/);
+  setState(input: string): this {
+    const stateDefs = input.split(/\s*,\s*/g);
 
-    const state = pieces.filter(item => !item.startsWith("#"));
+    this._states = stateDefs.map(State.create);
 
-    if (state.length !== 1) {
-      throw new Error("exactly one state required");
-    }
-
-    this._state = state[0];
-    this._tags = pieces
-      .filter(item => item.startsWith("#"))
-      .map(tag => tag.replace("#", ""));
+    return this;
   }
 
-  setPattern(pattern: RegExp): void {
+  /**
+   * Add another matching state (and tags) for the Rule
+   *
+   * @example
+   * setState("*")
+   * setState("default")
+   * setState("comment #open")
+   * setState("custom #foo #bar #baz")
+   */
+  addState(input: string): this {
+    this._states.push(new State(input));
+
+    return this;
+  }
+
+  setPattern(pattern: RegExp): this {
     /* ECMAScript <= 5 */
     let flags = "g";
 
@@ -107,5 +118,7 @@ export class Rule {
       flags += "u";
 
     this._pattern = new RegExp(pattern.source, flags);
+
+    return this;
   }
 }
