@@ -1,15 +1,23 @@
-export declare function makeState(stateDef: string): TaggedState;
-export declare class TaggedState {
-    static _states: Array<string>;
+export declare class State {
+    static default(): State;
+    static create(taggedState: string): State;
+    _name: string;
     _tags: Array<string>;
-    _states: Array<string>;
+    get isTagged(): boolean;
     constructor(stateDef: string);
-    hasTags(): boolean;
     toString(): string;
-    tagsToString(): string;
-    pushState(state: string): this;
-    popState(): string | undefined;
-    pushTag(tag: string): this;
-    popTag(): string | undefined;
+    stringifyTags(): string;
+    /**
+     * Test if this state's name mathces the provided name
+     */
+    is(state: string): boolean;
+    /**
+     * Test if two State objects match
+     */
+    matches(state: State): boolean;
+    filterTags(cb: (tag: string) => boolean): Array<string>;
+    hasTag(tag: string): boolean;
+    tag(tag: string): this;
+    unTag(tag: string): this;
 }
 //# sourceMappingURL=State.d.ts.map

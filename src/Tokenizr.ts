@@ -1,11 +1,5 @@
 import { ActionContext } from "./ActionContext";
-import {
-  arrayEquals,
-  assertIsString,
-  excerpt,
-  isRegExp,
-  last
-} from "./lib";
+import { assertIsString, excerpt, isRegExp, last } from "./lib";
 import { ParsingError } from "./ParsingError";
 import { Rule } from "./Rule";
 import { Token } from "./Token";
@@ -267,11 +261,11 @@ export class Tokenizr {
 
     this._rules.push(rule);
 
-    if (this.config.debug) {
-      this._log(
-        `rule: configure rule (state: ${rule._state}, pattern: ${rule._pattern.source})`
-      );
-    }
+    // if (this.config.debug) {
+    //   this._log(
+    //     `rule: configure rule (state: ${rule._state}, pattern: ${rule._pattern.source})`
+    //   );
+    // }
 
     return this;
   }
@@ -560,47 +554,57 @@ export class Tokenizr {
 
       /*  iterate over all rules...  */
       for (let i = 0; i < this._rules.length; i++) {
-        const thisRule = this._rules[i];
+        const $rule = this._rules[i];
 
         if (this.config.debug) {
+          const state = $rule._states
+            .map(state => state.toString())
+            .join(", ");
+
           this._log(
-            `  RULE: state(s): <${thisRule.stringify.tags()}>, pattern: ${
-              thisRule._pattern.source
-            }`
+            `  RULE: state(s): <${state}>, ` +
+              `pattern: ${$rule._pattern.source}`
           );
         }
 
         /*  one of rule's states (and all of its tags) has to match  */
         let matches = false;
+        const currentState = last(this._state);
 
-        if (thisRule._state !== "*") {
-          if (thisRule._state === last(this._state)) {
-            matches = true;
+        let statesMatch = false;
+        // let idx = states.indexOf("*");
+
+        /** didn't match the "any" state */
+        if (!$rule.willMatchAnyState) {
+          statesMatch = $rule.hasState(currentState);
+        }
+
+        /** state matched, so check tags if any */
+        if (statesMatch) {
+          matches = true;
+
+          const matchedState = $rule.getState(currentState);
+
+          if (matchedState.isTagged) {
+            const tags = matchedState.filterTags(
+              tag => !this._tag[tag]
+            );
+
+            if (tags.length > 0) {
+              matches = false;
+            }
           }
         }
 
-        /* state matched so we must test the tags */
-        if (matches) {
-          const tagsMatch = arrayEquals(
-            Object.keys(this._tag),
-            thisRule._tags
-          );
-
-          if (tagsMatch !== true) {
-            matches = false;
-          }
-        }
-
-        /* all good, keep going */
         if (!matches) continue;
 
         /*  match pattern at the last position  */
-        thisRule._pattern.lastIndex = this._pos;
-        let found = thisRule._pattern.exec(this._input);
-        thisRule._pattern.lastIndex = this._pos;
+        $rule._pattern.lastIndex = this._pos;
+        let found = $rule._pattern.exec(this._input);
+        $rule._pattern.lastIndex = this._pos;
 
         if (
-          (found = thisRule._pattern.exec(this._input)) !== null &&
+          (found = $rule._pattern.exec(this._input)) !== null &&
           found.index === this._pos
         ) {
           if (this.config.debug)
@@ -614,13 +618,13 @@ export class Tokenizr {
           this._ctx._ignore = false;
 
           if (this._before !== null) {
-            this._before.call(this._ctx, this._ctx, found, thisRule);
+            this._before.call(this._ctx, this._ctx, found, $rule);
           }
 
-          thisRule._action.call(this._ctx, this._ctx, found, thisRule);
+          $rule._action.call(this._ctx, this._ctx, found, $rule);
 
           if (this._after !== null) {
-            this._after.call(this._ctx, this._ctx, found, thisRule);
+            this._after.call(this._ctx, this._ctx, found, $rule);
           }
 
           /*  reject current action, continue matching  */
@@ -636,8 +640,8 @@ export class Tokenizr {
 
           /*  ignore token  */
           if (this._ctx._ignore) {
-            this._progress(this._pos, thisRule._pattern.lastIndex);
-            this._pos = thisRule._pattern.lastIndex;
+            this._progress(this._pos, $rule._pattern.lastIndex);
+            this._pos = $rule._pattern.lastIndex;
 
             if (this._pos >= this._len) {
               finish();
@@ -650,8 +654,8 @@ export class Tokenizr {
 
           /*  accept token(s)  */
           if (this._pending.length > 0) {
-            this._progress(this._pos, thisRule._pattern.lastIndex);
-            this._pos = thisRule._pattern.lastIndex;
+            this._progress(this._pos, $rule._pattern.lastIndex);
+            this._pos = $rule._pattern.lastIndex;
 
             if (this._pos >= this._len) {
               finish();
@@ -662,7 +666,7 @@ export class Tokenizr {
 
           /*  nothing worked  */
           throw new Error(
-            `action of pattern "${thisRule._pattern.source}" neither rejected nor accepted any token(s)`
+            `action of pattern "${$rule._pattern.source}" neither rejected nor accepted any token(s)`
           );
         }
       }

@@ -6,9 +6,13 @@ export class Rule {
   _name = "unknown";
   _pattern!: RegExp;
   _states: Array<State> = [];
-  _tags: Array<string> = [];
+  // _tags: Array<string> = [];
 
   stringify: Record<string, Function> = {};
+
+  get willMatchAnyState(): boolean {
+    return this.hasState("*");
+  }
 
   get hasPattern(): boolean {
     return typeof this._pattern !== "undefined";
@@ -22,21 +26,24 @@ export class Rule {
     return typeof this._name !== "undefined";
   }
 
-  // get State(): string {
-  //   return `${this._state} ${this.tagsToString()}`;
-  // }
-
-  constructor() {
-    this.stringify.tags = () =>
-      this._tags.map(tag => `#${tag}`).join(" ");
+  toString(): string {
+    return this._states.map(toString).join(", ");
   }
 
   hasState(state: string): boolean {
     return this._states.filter(s => s.is(state)).length > 0;
   }
 
-  getState(state: string): State | undefined {
-    return this._states.find(s => s.is(state));
+  getState(state: string): State {
+    if (!this.hasState(state)) {
+      throw Error();
+    }
+
+    return this._states.find(s => s.is(state)) as State;
+  }
+
+  getStates(): Array<string> {
+    return this._states.map(item => item._name);
   }
 
   /**

@@ -12,6 +12,10 @@ export class State {
   _name = "default";
   _tags: Array<string> = [];
 
+  get isTagged(): boolean {
+    return this._tags.length > 0;
+  }
+
   constructor(stateDef: string) {
     const pieces = stateDef.split(/\s+/g);
     const states = pieces.filter(p => !p.startsWith("#"));
@@ -50,12 +54,12 @@ export class State {
     );
   }
 
-  hasTag(tag: string): boolean {
-    return this._tags.includes(tag);
+  filterTags(cb: (tag: string) => boolean): Array<string> {
+    return this._tags.filter(cb);
   }
 
-  isTagged(): boolean {
-    return this._tags.length > 0;
+  hasTag(tag: string): boolean {
+    return this._tags.includes(tag);
   }
 
   tag(tag: string): this {
