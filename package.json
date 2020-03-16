@@ -30,9 +30,7 @@
   "bugs": "https://github.com/rse/tokenizr/issues",
   "scripts": {
     "demo": "babel-node ./demo/sample.js",
-    "test": "yarn build && yarn jest",
-    "test:stateful": "yarn test --testPathPattern stateful",
-    "test:stateless": "yarn test --testPathPattern stateless",
+    "test": "cross-env DEBUG=1 yarn jest",
     "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json",
     "clean": "yarn rimraf ./build/*",
     "lint": "yarn eslint \"./src/**/*.ts\"",
@@ -43,6 +41,7 @@
     "@babel/core": "^7.8.7",
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
+    "cross-env": "^7.0.2",
     "rimraf": "^3.0.2",
     "typedoc": "^0.16.11",
     "typescript": "^3.8.2"

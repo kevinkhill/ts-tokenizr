@@ -1,5 +1,6 @@
 import { ActionContext } from "./ActionContext";
-import { assertIsString, excerpt, isRegExp, last } from "./lib";
+import { assertIsString, excerpt, isRegExp } from "./lib";
+import { StateStack } from "./lib/StateStack";
 import { ParsingError } from "./ParsingError";
 import { Rule } from "./Rule";
 import { Token } from "./Token";
@@ -31,12 +32,16 @@ export class Tokenizr {
   _after: Action | null = null;
   _before: Action | null = null;
   _finish: FinishAction | null = null;
+  // _tags: Array<string> = [];
+  _state: StateStack;
   _tag: Tags = {};
-  _state: Array<string> = ["default"];
+  // _state: Array<string> = ["default"];
   _transaction: Array<Array<Token>> = [];
 
   constructor(config?: Partial<TokenizrConfig>) {
     this.config = { ...Tokenizr.defaults, ...config };
+
+    this._state = new StateStack("default");
 
     this._ctx = new ActionContext(this);
   }
@@ -51,11 +56,14 @@ export class Tokenizr {
     this._pos = 0;
     this._line = 1;
     this._column = 1;
-    this._state = ["default"];
-    this._tag = {};
+    // this._state = ["default"];
+    // this._tag = {};
     this._transaction = [];
     this._pending = [];
     this._stopped = false;
+
+    this._state.clear();
+
     this._ctx = new ActionContext(this);
 
     return this;
@@ -240,6 +248,7 @@ export class Tokenizr {
     if (typeof state === "string") {
       rule.setState(state);
     } else {
+      rule.setState("default");
       rule.setPattern(state);
     }
 
@@ -261,11 +270,11 @@ export class Tokenizr {
 
     this._rules.push(rule);
 
-    // if (this.config.debug) {
-    //   this._log(
-    //     `rule: configure rule (state: ${rule._state}, pattern: ${rule._pattern.source})`
-    //   );
-    // }
+    if (this.config.debug) {
+      this._log(
+        `rule: configure rule (state: ${rule.states}, pattern: ${rule._pattern.source})`
+      );
+    }
 
     return this;
   }
@@ -542,9 +551,7 @@ export class Tokenizr {
           .join(" ");
 
         this._log(
-          `INPUT: state: <${
-            this._state[this._state.length - 1]
-          }>, tags: <${tags}>, text: ` +
+          `INPUT: state: <${this._state.peek()}>, tags: <${tags}>, text: ` +
             (e.prologTrunc ? "..." : '"') +
             `${e.prologText}<${e.tokenText}>${e.epilogText}` +
             (e.epilogTrunc ? "..." : '"') +
@@ -556,10 +563,14 @@ export class Tokenizr {
       for (let i = 0; i < this._rules.length; i++) {
         const $rule = this._rules[i];
 
+        console.log("::DEBUG::", $rule);
+
         if (this.config.debug) {
-          const state = $rule._states
-            .map(state => state.toString())
-            .join(", ");
+          const state: string = $rule.states[0];
+
+          // if ($rule.states.length > 1) {
+          //   state = $rule.states.join(", ");
+          // }
 
           this._log(
             `  RULE: state(s): <${state}>, ` +
@@ -569,9 +580,9 @@ export class Tokenizr {
 
         /*  one of rule's states (and all of its tags) has to match  */
         let matches = false;
-        const currentState = last(this._state);
-
         let statesMatch = false;
+
+        const currentState = this._state.peek();
         // let idx = states.indexOf("*");
 
         /** didn't match the "any" state */
@@ -584,6 +595,13 @@ export class Tokenizr {
           matches = true;
 
           const matchedState = $rule.getState(currentState);
+
+          console.log(
+            "CURRENT STATE",
+            currentState,
+            "MATCHED STATE",
+            matchedState
+          );
 
           if (matchedState.isTagged) {
             const tags = matchedState.filterTags(
@@ -671,6 +689,8 @@ export class Tokenizr {
         }
       }
     }
+
+    console.error(`RULES: ${JSON.stringify(this._rules, null, 4)}`);
 
     /*  no pattern matched at all  */
     throw this.error("token not recognized");

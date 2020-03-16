@@ -23,14 +23,16 @@ export class Token {
   }
 
   toString(): string {
-    return [
-      `<type: ${this.type}, `,
-      `value: ${JSON.stringify(this.value)}, `,
-      `text: ${JSON.stringify(this.text)}, `,
-      `pos: ${this.pos}, `,
-      `line: ${this.line}, `,
-      `column: ${this.column}>`
-    ].join();
+    const tokenAttr = [
+      `type: ${this.type}`,
+      `value: ${JSON.stringify(this.value)}`,
+      `text: ${JSON.stringify(this.text)}`,
+      `pos: ${this.pos}`,
+      `line: ${this.line}`,
+      `column: ${this.column}`
+    ].join(", ");
+
+    return `<${tokenAttr}>`;
   }
 
   isA(type: string, value?: unknown): boolean {

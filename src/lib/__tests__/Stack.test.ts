@@ -2,7 +2,9 @@ import { Stack } from "../Stack";
 
 describe("new Stack()", () => {
   test(`should have the correct functionality`, () => {
-    const strings = new Stack("A");
+    const strings = new Stack();
+
+    strings.push("A");
 
     expect(strings).toHaveLength(1);
 
@@ -37,15 +39,5 @@ describe("new Stack()", () => {
     expect(strings.isEmpty).toBeTruthy();
 
     expect(strings.peek()).toBeUndefined();
-
-    strings.push("T");
-    strings.push("A");
-    strings.push("C");
-
-    expect(strings.peek()).toBe("C");
-
-    strings.init("O");
-
-    expect(strings.peek()).toBe("O");
   });
 });

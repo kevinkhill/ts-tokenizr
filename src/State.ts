@@ -74,3 +74,20 @@ export class State {
     return this;
   }
 }
+
+export function statesMatch(
+  state1: string | State,
+  state2: string | State
+): boolean {
+  if (state1 instanceof State) {
+    // eslint-disable-next-line no-param-reassign
+    state1 = state1._name;
+  }
+
+  if (state2 instanceof State) {
+    // eslint-disable-next-line no-param-reassign
+    state2 = state2._name;
+  }
+
+  return state1 === state2;
+}

@@ -10,6 +10,10 @@ export class Rule {
 
   stringify: Record<string, Function> = {};
 
+  get states(): Array<string> {
+    return this._states.map(state => state.toString());
+  }
+
   get willMatchAnyState(): boolean {
     return this.hasState("*");
   }
@@ -24,10 +28,6 @@ export class Rule {
 
   get hasName(): boolean {
     return typeof this._name !== "undefined";
-  }
-
-  toString(): string {
-    return this._states.map(toString).join(", ");
   }
 
   hasState(state: string): boolean {

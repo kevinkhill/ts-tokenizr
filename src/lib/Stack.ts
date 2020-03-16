@@ -1,9 +1,13 @@
 export class Stack<T> {
-  private elements: Array<T>;
+  static init<T>(element: T): Stack<T> {
+    const stack = new Stack<T>();
 
-  constructor(element?: T) {
-    this.elements = element ? [element] : [];
+    stack.push(element);
+
+    return stack;
   }
+
+  protected elements: Array<T> = [];
 
   get length(): number {
     return this.elements.length;
@@ -15,10 +19,6 @@ export class Stack<T> {
 
   get isNotEmpty(): boolean {
     return !this.isEmpty;
-  }
-
-  init(element: T): void {
-    this.elements = [element];
   }
 
   clear(): void {

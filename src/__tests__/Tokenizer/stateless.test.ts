@@ -1,9 +1,11 @@
-import { getStatelessTokenizr } from "../testHelpers";
+import { getStatelessTokenizr } from "../__helpers__";
 
 describe("ts-tokenizr library, without states", () => {
   const tokenizr = getStatelessTokenizr();
 
-  tokenizr.input(`foo42,\n "bar baz",\n quux/* */`);
+  tokenizr
+    .debug(Boolean(process.env.DEBUG))
+    .input(`foo42,\n "bar baz",\n quux/* */`);
 
   test("should have the expected functionality", () => {
     let tokens;

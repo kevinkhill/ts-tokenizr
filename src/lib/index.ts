@@ -1,7 +1,7 @@
 export { arrayEquals } from "./arrayEquals";
 export { excerpt } from "./excerpt";
 export * from "./guards";
-export { last } from "./last";
+export { StateStack } from "./StateStack";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function toString(obj: any): string {
