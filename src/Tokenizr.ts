@@ -563,14 +563,12 @@ export class Tokenizr {
       for (let i = 0; i < this._rules.length; i++) {
         const $rule = this._rules[i];
 
-        console.log("::DEBUG::", $rule);
-
         if (this.config.debug) {
-          const state: string = $rule.states[0];
+          let state = $rule.states[0];
 
-          // if ($rule.states.length > 1) {
-          //   state = $rule.states.join(", ");
-          // }
+          if ($rule.states.length > 1) {
+            state = $rule.states.join(", ");
+          }
 
           this._log(
             `  RULE: state(s): <${state}>, ` +
@@ -596,13 +594,6 @@ export class Tokenizr {
 
           const matchedState = $rule.getState(currentState);
 
-          console.log(
-            "CURRENT STATE",
-            currentState,
-            "MATCHED STATE",
-            matchedState
-          );
-
           if (matchedState.isTagged) {
             const tags = matchedState.filterTags(
               tag => !this._tag[tag]
@@ -625,8 +616,9 @@ export class Tokenizr {
           (found = $rule._pattern.exec(this._input)) !== null &&
           found.index === this._pos
         ) {
-          if (this.config.debug)
+          if (this.config.debug) {
             this._log("    MATCHED: " + JSON.stringify(found));
+          }
 
           /*  pattern found, so give action a chance to operate
               on it and act according to its results  */
@@ -689,8 +681,6 @@ export class Tokenizr {
         }
       }
     }
-
-    console.error(`RULES: ${JSON.stringify(this._rules, null, 4)}`);
 
     /*  no pattern matched at all  */
     throw this.error("token not recognized");

@@ -1,4 +1,4 @@
-import { Tokenizr } from "../../Tokenizr";
+import { Tokenizr } from "../../../Tokenizr";
 
 export function getStatelessTokenizr(): Tokenizr {
   const tokenizr = new Tokenizr();

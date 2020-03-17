@@ -1,14 +1,11 @@
-import {
-  getSampleFileContents,
-  getStatefulTokenizr
-} from "../__helpers__";
+import { getStatefulTokenizr } from "./__helpers__";
 
-describe("ts-tokenizr library, with states", () => {
+describe("ts-tokenizr library, using a stateful tokenizer.", () => {
   const tokenizr = getStatefulTokenizr();
 
   tokenizr
     .debug(Boolean(process.env.DEBUG))
-    .input(getSampleFileContents("sample.cfg"));
+    .input(`foo42,\n "bar baz",\n quux/* */`);
 
   test("should have the expected functionality", () => {
     let tokens;

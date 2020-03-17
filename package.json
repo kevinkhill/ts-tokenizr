@@ -30,7 +30,7 @@
   "bugs": "https://github.com/rse/tokenizr/issues",
   "scripts": {
     "demo": "babel-node ./demo/sample.js",
-    "test": "cross-env DEBUG=1 yarn jest",
+    "test": "yarn jest",
     "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json",
     "clean": "yarn rimraf ./build/*",
     "lint": "yarn eslint \"./src/**/*.ts\"",
