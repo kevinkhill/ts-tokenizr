@@ -1,31 +1,34 @@
 import { Tokenizr } from "../../Tokenizr";
 
-let tokenizr: Tokenizr;
-
-beforeAll(() => {
-  tokenizr = new Tokenizr();
-});
-
 describe("ts-tokenizr library", () => {
+  const tokenizr = new Tokenizr();
+
   test("should expose its official API", () => {
+    expect(tokenizr.debug).toBeInstanceOf(Function);
+    expect(tokenizr.rule).toBeInstanceOf(Function);
+
+    expect(tokenizr.push).toBeInstanceOf(Function);
+    expect(tokenizr.pop).toBeInstanceOf(Function);
+
     expect(tokenizr.token).toBeInstanceOf(Function);
     expect(tokenizr.tokens).toBeInstanceOf(Function);
+
     expect(tokenizr.tag).toBeInstanceOf(Function);
     expect(tokenizr.tagged).toBeInstanceOf(Function);
     expect(tokenizr.untag).toBeInstanceOf(Function);
-  });
-});
 
-describe("tags and tagging", () => {
-  test("should have the expected functionality", () => {
-    expect(tokenizr.tagged("test")).toBeFalsy();
+    expect(tokenizr.before).toBeInstanceOf(Function);
+    expect(tokenizr.after).toBeInstanceOf(Function);
+    expect(tokenizr.finish).toBeInstanceOf(Function);
 
-    tokenizr.tag("test");
+    expect(tokenizr.peek).toBeInstanceOf(Function);
+    expect(tokenizr.skip).toBeInstanceOf(Function);
+    expect(tokenizr.consume).toBeInstanceOf(Function);
 
-    expect(tokenizr.tagged("test")).toBeTruthy();
-
-    tokenizr.untag("test");
-
-    expect(tokenizr.tagged("test")).toBeFalsy();
+    expect(tokenizr.begin).toBeInstanceOf(Function);
+    expect(tokenizr.depth).toBeInstanceOf(Function);
+    expect(tokenizr.commit).toBeInstanceOf(Function);
+    expect(tokenizr.rollback).toBeInstanceOf(Function);
+    expect(tokenizr.alternatives).toBeInstanceOf(Function);
   });
 });

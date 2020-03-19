@@ -476,18 +476,23 @@ export class Tokenizr {
   /**
    * Execute multiple alternative callbacks
    */
-  alternatives(...alternatives: Array<() => never>): unknown {
-    let result = null;
+  alternatives(
+    ...alternatives: Array<(tokenizr: this) => unknown>
+  ): unknown {
+    let result: unknown = null;
     let depths: Array<DepthError> = [];
 
     for (let i = 0; i < alternatives.length; i++) {
       try {
         this.begin();
-        result = alternatives[i].call(this);
+        result = alternatives[i].call(this, this);
         this.commit();
         break;
       } catch (error) {
-        depths.push({ error, depth: this.depth() });
+        depths.push({
+          error,
+          depth: this.depth()
+        });
         this.rollback();
         this._log(`EXCEPTION: ${error.toString()}`);
         continue;
@@ -571,8 +576,7 @@ export class Tokenizr {
           }
 
           this._log(
-            `  RULE: state(s): <${state}>, ` +
-              `pattern: ${$rule._pattern.source}`
+            `  RULE: state(s): <${state}>, pattern: ${$rule._pattern.source}`
           );
         }
 
@@ -584,7 +588,7 @@ export class Tokenizr {
         // let idx = states.indexOf("*");
 
         /** didn't match the "any" state */
-        if (!$rule.willMatchAnyState) {
+        if ($rule.willMatchAnyState === false) {
           statesMatch = $rule.hasState(currentState);
         }
 

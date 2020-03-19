@@ -7,6 +7,24 @@ beforeEach(() => {
 });
 
 describe("Rule.setState()", () => {
+  test(`should correctly set a simple pattern and match input`, () => {
+    rule.setPattern(/[a-z]+/);
+
+    expect(rule.hasPattern).toBeTruthy();
+
+    const match1 = rule.test("tacos");
+
+    expect(match1).toHaveLength(1);
+
+    rule.setPattern(/\/\*\s?(.+)\\s?*\//);
+
+    expect(rule.hasPattern).toBeTruthy();
+
+    const match2 = rule.test("/* Tacos */");
+
+    expect(match2).toHaveLength(1);
+  });
+
   test(`should correctly parse "* #foobar"`, () => {
     const testString = "* #foobar";
 
