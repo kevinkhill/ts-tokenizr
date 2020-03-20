@@ -1,3 +1,4 @@
+import { MatchResult } from "./MatchResult";
 import { State } from "./State";
 import { Action } from "./types";
 
@@ -49,8 +50,8 @@ export class Rule {
   /**
    * Test a string against the rule
    */
-  test(input: string): RegExpExecArray | null {
-    return this._pattern.exec(input);
+  test(input: string): MatchResult {
+    return new MatchResult(this._pattern.exec(input));
   }
 
   // tagsToString(): string {

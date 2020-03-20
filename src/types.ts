@@ -53,3 +53,15 @@ export interface Excerpt {
   epilogText: string;
   epilogTrunc: boolean;
 }
+
+export interface MatchResult {
+  result: Array<string>;
+}
+
+export type NoMatch = MatchResult & {
+  matched: false;
+};
+
+export type Matched = MatchResult & {
+  matched: true;
+};
