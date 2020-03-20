@@ -11,21 +11,19 @@ module.exports = {
     node: true
   },
   plugins: [
-    "jest",
     "import",
     "prettier",
-    "jest-formatting",
+    "@typescript-eslint",
     "simple-import-sort",
-    "@typescript-eslint"
+    "eslint-plugin-tsdoc"
   ],
   extends: [
     "node",
     "eslint:recommended",
+    'plugin:@typescript-eslint/recommended',
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:import/errors",
     "plugin:import/typescript",
-    "plugin:jest-formatting/strict",
-    "plugin:@typescript-eslint/recommended",
     "prettier",
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended" // KEEP THIS LAST
@@ -33,16 +31,13 @@ module.exports = {
   overrides: [
     {
       files: ["*/__tests__/**/*.test.ts"],
-      globals: {
-        getTokenizer: true
-      },
       env: {
         "jest/globals": true
       },
       extends: [
         "plugin:jest/style",
         "plugin:jest/recommended",
-        "plugin:jest-formatting/recommended"
+        "plugin:jest-formatting/strict"
       ],
       plugins: ["jest", "jest-formatting"],
       rules: {
@@ -72,6 +67,11 @@ module.exports = {
     eqeqeq: ["error", "always"],
     "no-param-reassign": "error",
     "no-mixed-operators": "error",
+
+    //
+    // eslint-plugin-tsdoc
+    //
+    "tsdoc/syntax": "error",
 
     //
     // @typescript-eslint/eslint-plugin

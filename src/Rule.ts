@@ -1,3 +1,4 @@
+import { assertIsString } from "./lib/guards";
 import { MatchResult } from "./MatchResult";
 import { State } from "./State";
 import { Action } from "./types";
@@ -31,6 +32,19 @@ export class Rule {
     return typeof this._name !== "undefined";
   }
 
+  /**
+   * Test a string against the rule
+   */
+  test(input: string): MatchResult {
+    return new MatchResult(this._pattern.exec(input));
+  }
+
+  state(query?: string): State | undefined {
+    assertIsString(query);
+
+    return this._states.find(state => state._name === query);
+  }
+
   hasState(state: string): boolean {
     return this._states.filter(s => s.is(state)).length > 0;
   }
@@ -48,22 +62,17 @@ export class Rule {
   }
 
   /**
-   * Test a string against the rule
+   * Set the name for the Rule
    */
-  test(input: string): MatchResult {
-    return new MatchResult(this._pattern.exec(input));
-  }
-
-  // tagsToString(): string {
-  //   return this._tags.map(tag => `#${tag}`).join(" ");
-  // }
-
   setName(name: string): this {
     this._name = name;
 
     return this;
   }
 
+  /**
+   * Set the {@link Action} for the {@link Rule}
+   */
   setAction(action: Action): this {
     this._action = action;
 
