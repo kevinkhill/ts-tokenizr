@@ -9,11 +9,11 @@ export class State {
     return new State(taggedState);
   }
 
-  _name = "default";
-  _tags: Array<string> = [];
+  name = "default";
+  tags: Array<string> = [];
 
   get isTagged(): boolean {
-    return this._tags.length > 0;
+    return this.tags.length > 0;
   }
 
   constructor(stateDef: string) {
@@ -24,25 +24,25 @@ export class State {
       throw new Error("exactly one state required");
     }
 
-    this._name = states[0];
-    this._tags = pieces
+    this.name = states[0];
+    this.tags = pieces
       .filter(piece => piece.startsWith("#"))
       .map(tag => tag.replace("#", ""));
   }
 
   toString(): string {
-    return `${this._name} ${this.stringifyTags()}`;
+    return `${this.name} ${this.stringifyTags()}`;
   }
 
   stringifyTags(): string {
-    return this._tags.map(tag => `#${tag}`).join(" ");
+    return this.tags.map(tag => `#${tag}`).join(" ");
   }
 
   /**
    * Test if this state's name mathces the provided name
    */
   is(state: string): boolean {
-    return this._name === state;
+    return this.name === state;
   }
 
   /**
@@ -50,26 +50,26 @@ export class State {
    */
   matches(state: State): boolean {
     return (
-      this._name === state._name && arrayEquals(this._tags, state._tags)
+      this.name === state.name && arrayEquals(this.tags, state.tags)
     );
   }
 
   filterTags(cb: (tag: string) => boolean): Array<string> {
-    return this._tags.filter(cb);
+    return this.tags.filter(cb);
   }
 
   hasTag(tag: string): boolean {
-    return this._tags.includes(tag);
+    return this.tags.includes(tag);
   }
 
   tag(tag: string): this {
-    this._tags.push(tag);
+    this.tags.push(tag);
 
     return this;
   }
 
   unTag(tag: string): this {
-    delete this._tags[this._tags.indexOf(tag)];
+    delete this.tags[this.tags.indexOf(tag)];
 
     return this;
   }
@@ -81,12 +81,12 @@ export function statesMatch(
 ): boolean {
   if (state1 instanceof State) {
     // eslint-disable-next-line no-param-reassign
-    state1 = state1._name;
+    state1 = state1.name;
   }
 
   if (state2 instanceof State) {
     // eslint-disable-next-line no-param-reassign
-    state2 = state2._name;
+    state2 = state2.name;
   }
 
   return state1 === state2;

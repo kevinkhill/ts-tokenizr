@@ -4,18 +4,18 @@ describe("new State()", () => {
   test(`should correctly parse "* #foobar"`, () => {
     const state = new State("* #foobar");
 
-    expect(state._name).toBe("*");
-    expect(state._tags).toHaveLength(1);
-    expect(state._tags).toContain("foobar");
+    expect(state.name).toBe("*");
+    expect(state.tags).toHaveLength(1);
+    expect(state.tags).toContain("foobar");
   });
 
   test(`should correctly parse "foo #bar #baz"`, () => {
     const state = new State("foo #bar #baz");
 
-    expect(state._name).toBe("foo");
-    expect(state._tags).toHaveLength(2);
-    expect(state._tags).toContain("bar");
-    expect(state._tags).toContain("baz");
+    expect(state.name).toBe("foo");
+    expect(state.tags).toHaveLength(2);
+    expect(state.tags).toContain("bar");
+    expect(state.tags).toContain("baz");
   });
 
   test(`should throw when finding more / less than one state`, () => {

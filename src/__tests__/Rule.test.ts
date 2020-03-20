@@ -52,7 +52,7 @@ describe("Rule.setState()", () => {
     rule.setState(testString);
 
     expect(rule.hasState("*")).toBeTruthy();
-    expect(rule.getState("*")?._tags).toHaveLength(1);
+    expect(rule.getState("*")?.tags).toHaveLength(1);
     expect(rule.getState("*")?.hasTag("foobar")).toBeTruthy();
   });
 
@@ -62,7 +62,7 @@ describe("Rule.setState()", () => {
     rule.setState(testString);
 
     expect(rule.hasState("foo")).toBeTruthy();
-    expect(rule.getState("foo")?._tags).toHaveLength(2);
+    expect(rule.getState("foo")?.tags).toHaveLength(2);
     expect(rule.getState("foo")?.hasTag("bar")).toBeTruthy();
     expect(rule.getState("foo")?.hasTag("baz")).toBeTruthy();
   });
