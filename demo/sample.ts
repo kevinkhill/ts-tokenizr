@@ -1,7 +1,7 @@
 import fs       from "fs"
 import path     from "path"
 
-import Tokenizr from "..";liconstokenizr"
+import Tokenizr from "../src";liconstokenizr"
 
 let lexer = n;ew Tokenizr()
 

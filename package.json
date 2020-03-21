@@ -16,14 +16,14 @@
   },
   "authors": [
     {
-      "name": "Dr. Ralf S. Engelschall",
-      "email": "rse@engelschall.com",
-      "url": "http://engelschall.com"
-    },
-    {
       "name": "Kevin Hill",
       "email": "kevinkhill@gmail.com",
       "url": "http://github.com/kevinkhill"
+    },
+    {
+      "name": "Dr. Ralf S. Engelschall",
+      "email": "rse@engelschall.com",
+      "url": "http://engelschall.com"
     }
   ],
   "license": "MIT",
@@ -31,10 +31,10 @@
   "bugs": "https://github.com/kevinkhill/ts-tokenizr/issues",
   "scripts": {
     "demo": "ts-node ./demo/sample.ts",
-    "test": "yarn jest",
-    "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json",
-    "clean": "yarn rimraf ./build/*",
-    "lint": "yarn eslint \"./src/**/*.ts\"",
+    "dev:demo": "ts-node-dev ./demo/sample.ts",
+    "test": "jest",
+    "dev": "yarn test --watch --runInBand",
+    "lint": "eslint \"./src/**/*.ts\"",
     "docs": "typedoc --out ./docs ./src"
   },
   "devDependencies": {
@@ -42,7 +42,6 @@
     "@types/node": "^13.9.2",
     "@typescript-eslint/eslint-plugin": "^2.7.0",
     "@typescript-eslint/parser": "^2.20.0",
-    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-node": "^4.0.0",
     "eslint-config-prettier": "^6.5.0",
@@ -56,11 +55,12 @@
     "eslint-plugin-tsdoc": "^0.2.3",
     "husky": "^4.2.1",
     "jest": "^25.1.0",
-    "lint-staged": ">=10",
+    "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^25.2.1",
     "ts-node": "^8.7.0",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typedoc": "^0.16.11",
     "typescript": "^3.8.3"
   },
