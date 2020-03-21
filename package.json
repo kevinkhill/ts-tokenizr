@@ -30,8 +30,8 @@
   "homepage": "https://github.com/kevinkhill/ts-tokenizr",
   "bugs": "https://github.com/kevinkhill/ts-tokenizr/issues",
   "scripts": {
-    "demo": "ts-node ./demo/sample.ts",
-    "dev:demo": "ts-node-dev ./demo/sample.ts",
+    "demo": "tsnd ./demo/sample.ts",
+    "demo:dev": "tsnd --respawn ./demo/sample.ts",
     "test": "jest",
     "dev": "yarn test --watch --runInBand",
     "lint": "eslint \"./src/**/*.ts\"",
