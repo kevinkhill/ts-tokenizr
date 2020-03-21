@@ -6,12 +6,13 @@
     "string",
     "token",
     "scanner",
-    "lexer"
+    "lexer",
+    "tokenizer"
   ],
-  "main": "lib/tokenizr.js",
+  "main": "src/index.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rse/tokenizr.git"
+    "url": "https://github.com/kevinkhill/ts-tokenizr.git"
   },
   "authors": [
     {
@@ -26,8 +27,8 @@
     }
   ],
   "license": "MIT",
-  "homepage": "https://github.com/rse/tokenizr",
-  "bugs": "https://github.com/rse/tokenizr/issues",
+  "homepage": "https://github.com/kevinkhill/ts-tokenizr",
+  "bugs": "https://github.com/kevinkhill/ts-tokenizr/issues",
   "scripts": {
     "demo": "babel-node ./demo/sample.js",
     "test": "yarn jest",
