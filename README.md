@@ -8,7 +8,11 @@ Flexible String Tokenization Library for TypeScript
 Inspiration
 -----
 
-So I happened upon [this little gem of a library](https://github.com/rse/tokenizr) after writing my own for a project. It had many more features than mine, so to try and further my own knowledge and as practice, I converted the whole project to TypeScript! This way I could easily type tokens, add new features, and more. I also decided to swap mocha for jest since I was working in a monorepo and it just worked.
+I found [this gem of a library](https://github.com/rse/tokenizr) after writing my own for a project. It was full of features, and I just didn't properly know how to implement my own. It worked, but it was... "dumb". I decided to use it in my project, and along the way, happened to convert the whole thing into TypeScript :laughing:
+
+It was a fun exercise and really helped me understand how it worked.
+
+Thanks for the great library [rse](https://github.com/rse), *cheers!* :beers:
 
 
 About
@@ -73,14 +77,9 @@ Installation
 #### Node environments (with NPM package manager):
 
 ```shell
-$ npm install tokenizr
+$ npm install ts-tokenizr
 ```
 
-#### Browser environments (with Bower package manager):
-
-```shell
-$ bower install tokenizr
-```
 
 Usage
 -----
@@ -102,9 +101,11 @@ Then we can write a lexical scanner in ECMAScript 6 (under Node.js) for the toke
 
 ```js
 import fs       from "fs"
-import Tokenizr from "tokenizr"
+import Tokenizr from "ts-tokenizr"
 
-let lexer = new Tokenizr()
+let lexer = new Tokenizr({
+  debug: true
+})
 
 lexer.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, (ctx, match) => {
     ctx.accept("id")
@@ -128,7 +129,6 @@ lexer.rule(/./, (ctx, match) => {
 let cfg = fs.readFileSync("sample.cfg", "utf8")
 
 lexer.input(cfg)
-lexer.debug(true)
 lexer.tokens().forEach((token) => {
     console.log(token.toString())
 })
