@@ -30,7 +30,7 @@
   "homepage": "https://github.com/kevinkhill/ts-tokenizr",
   "bugs": "https://github.com/kevinkhill/ts-tokenizr/issues",
   "scripts": {
-    "demo": "babel-node ./demo/sample.js",
+    "demo": "ts-node ./demo/sample.ts",
     "test": "yarn jest",
     "build": "yarn clean && yarn tsc -p ./tsconfig.dist.json",
     "clean": "yarn rimraf ./build/*",
@@ -38,15 +38,31 @@
     "docs": "typedoc --out ./docs ./src"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.8.7",
-    "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
+    "@types/jest": "^25.1.1",
+    "@types/node": "^13.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.7.0",
+    "@typescript-eslint/parser": "^2.20.0",
     "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-node": "^4.0.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jest": "^23.1.1",
+    "eslint-plugin-jest-formatting": "^1.2.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-simple-import-sort": "^4.0.0",
     "eslint-plugin-tsdoc": "^0.2.3",
+    "husky": "^4.2.1",
+    "jest": "^25.1.0",
+    "lint-staged": ">=10",
+    "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
+    "ts-jest": "^25.2.1",
+    "ts-node": "^8.7.0",
     "typedoc": "^0.16.11",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.3"
   },
   "lint-staged": {
     "./src/**/*.ts": "eslint --cache --fix"

@@ -109,13 +109,11 @@ export class Tokenizr {
    * Push state
    */
   push(state: string): this {
+    const oldState = this._state.peek();
+
     this._state.push(state);
 
-    this._log(
-      "    STATE (PUSH): " +
-        `old: <${this._state[this._state.length - 1]}>, ` +
-        `new: <${state}>`
-    );
+    this._log(`    STATE (PUSH): old: <${oldState}>, new: <${state}>`);
 
     return this;
   }
@@ -129,13 +127,11 @@ export class Tokenizr {
     }
 
     /*  pop old state  */
-    this._log(
-      "    STATE (POP): " +
-        `old: <${this._state[this._state.length - 1]}>, ` +
-        `new: <${this._state[this._state.length - 2]}>`
-    );
+    const oldState = this._state.pop();
 
-    this._state.pop();
+    this._log(
+      `    STATE (POP): old: <${oldState}>, new: <${this._state.peek()}>`
+    );
 
     return this;
   }
@@ -147,16 +143,16 @@ export class Tokenizr {
   state(state: string): this;
   state(state?: string): this | string {
     if (typeof state === "undefined") {
-      return this._state[this._state.length - 1];
+      return this._state.peek();
     }
 
     this._log(
       "    STATE (SET): " +
-        `old: <${this._state[this._state.length - 1]}>, ` +
+        `old: <${this._state.peek()}>, ` +
         `new: <${state}>`
     );
 
-    this._state[this._state.length - 1] = state;
+    this._state.push(state);
 
     return this;
   }

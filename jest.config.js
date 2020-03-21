@@ -1,8 +1,16 @@
-/* eslint-disable import/no-commonjs */
-const baseConfig = require("../../jest.config.js");
-
+// eslint-disable-next-line import/no-commonjs
 module.exports = {
-  ...baseConfig,
-  displayName: "ts-tokenizr",
-  testPathIgnorePatterns: ["/__helpers__/"]
+  rootDir: ".",
+  coverageDirectory: "<rootDir>/coverage/",
+  collectCoverageFrom: ["<rootDir>/packages/*/src/**/*.ts"],
+  modulePathIgnorePatterns: ["examples/.*", "packages/.*/build"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/demo/",
+    "__helpers__/",
+    "__tests__/utils.ts$"
+  ],
+  transform: {
+    "^.+\\.tsx?$": "ts-jest"
+  }
 };

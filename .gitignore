@@ -1,3 +1,16 @@
-node_modules/
-build/
-coverage/
+/node_modules
+/packages/*/node_modules
+
+.vscode
+.eslintcache
+yarn-error.log
+
+// Yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.pnp.*
+
+*.tsbuildinfo
+*.log
+*.cache
