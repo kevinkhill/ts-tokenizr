@@ -5,6 +5,10 @@ TS-Tokenizr
 Flexible String Tokenization Library for TypeScript
 
 
+![](https://github.com/actions/hello-world/workflows/.github/workflows/test.yml/badge.svg)
+![](https://github.com/actions/hello-world/workflows/.github/workflows/test.yml/badge.svg?branch=develop)
+
+
 Inspiration
 -----
 
