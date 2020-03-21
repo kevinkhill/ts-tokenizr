@@ -33,7 +33,7 @@ export class Rule {
   }
 
   /**
-   * Test a string against the rule
+   * Test a string against the {@link Rule}
    */
   test(input: string): MatchResult {
     return new MatchResult(this._pattern.exec(input));
@@ -42,7 +42,7 @@ export class Rule {
   state(query?: string): State | undefined {
     assertIsString(query);
 
-    return this._states.find(state => state._name === query);
+    return this._states.find(state => state.name === query);
   }
 
   hasState(state: string): boolean {
@@ -58,7 +58,7 @@ export class Rule {
   }
 
   getStates(): Array<string> {
-    return this._states.map(item => item._name);
+    return this._states.map(item => item.name);
   }
 
   /**

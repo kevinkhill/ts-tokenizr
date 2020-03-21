@@ -6,7 +6,7 @@ beforeEach(() => {
   rule = new Rule();
 });
 
-describe("Rule.setPattern() & Rule.test()", () => {
+describe("Rule.setPattern() & Rule.test() & MatchResult", () => {
   test(`should correctly set a simple pattern and match input`, () => {
     rule.setPattern(/[a-z]+/);
 

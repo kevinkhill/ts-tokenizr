@@ -31,7 +31,12 @@ export class ActionContext {
   /**
    * Retrieve information of current matching
    */
-  info(): Record<string, number> {
+  info(): {
+    line: number;
+    column: number;
+    pos: number;
+    len: number;
+  } {
     const len = this._match ? this._match[0].length : NaN;
 
     return {
