@@ -311,7 +311,7 @@ export class Tokenizr {
   }
 
   /**
-   * Determine and return all tokens
+   * Determine and return all tokens as an Array
    */
   tokens(): Array<Token> {
     const result: Array<Token> = [];
@@ -324,15 +324,24 @@ export class Tokenizr {
   }
 
   /**
-   * Determine and generate tokens
+   * Determine and generate tokens efficiently with a generator
    */
-  // *tokenGenerator() {
-  //   let token;
+  *tokenGenerator(): Generator<Token> {
+    let token;
 
-  //   while ((token = this.token()) !== null) {
-  //     yield token;
-  //   }
-  // }
+    while ((token = this.token()) !== null) {
+      yield token;
+    }
+  }
+
+  /**
+   * Sugar method for setting the input and parsing for tokens in one method.
+   */
+  tokenize(contents: string): Array<Token> {
+    this.input(contents);
+
+    return this.tokens();
+  }
 
   /**
    * Peek at the next token or token at particular offset

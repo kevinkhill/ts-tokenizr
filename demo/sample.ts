@@ -36,8 +36,12 @@ lexer.rule(/./, ctx => {
 fs.promises
   .readFile(path.join(__dirname, "sample.cfg"), "utf8")
   .then(contents => {
-    lexer.input(contents);
-    lexer.tokens().forEach(token => {
-      console.log(token.toString());
-    });
+    const tokens = lexer.tokenize(contents);
+
+    console.log(tokens.join("\n"));
+
+    // lexer.input(contents);
+    // lexer.tokens().forEach(token => {
+    //   console.log(token.toString());
+    // });
   });
