@@ -276,6 +276,13 @@ export class Tokenizr {
   }
 
   /**
+   * Sugar method for ignoring a token w/o defining an Action to ignore
+   */
+  ignoreRule(pattern: RegExp): this {
+    return this.rule(pattern, ctx => ctx.ignore());
+  }
+
+  /**
    * Determine and return next token
    */
   token(): Token | null {

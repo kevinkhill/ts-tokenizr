@@ -18,7 +18,7 @@ lexer.rule(/[+-]?[0-9]+/, (ctx, match) => {
   ctx.accept("number", parseInt(match[0]));
 });
 
-lexer.rule(/"((?:\\\"|[^\r\n])*)"/, (ctx, match) => {
+lexer.rule(/"((?:\\"|[^\r\n])*)"/, (ctx, match) => {
   ctx.accept("string", match[1].replace(/\\"/g, '"'));
 });
 
@@ -26,9 +26,8 @@ lexer.rule(/\/\/[^\r\n]*\r?\n/, ctx => {
   ctx.ignore();
 });
 
-lexer.rule(/[ \t\r\n]+/, ctx => {
-  ctx.ignore();
-});
+// Sugar method to save writing `ctx => ctx.ignore()`
+lexer.ignoreRule(/[ \t\r\n]+/);
 
 lexer.rule(/./, ctx => {
   ctx.accept("char");
