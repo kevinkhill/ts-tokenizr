@@ -1,6 +1,6 @@
 {
   "name": "ts-tokenizr",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "String Tokenization Library for TypeScript",
   "keywords": [
     "string",
@@ -35,8 +35,7 @@
     "test": "jest",
     "dev": "yarn test --watch --runInBand",
     "lint": "eslint \"./src/**/*.ts\"",
-    "docs": "typedoc --out ./docs ./src",
-    "semantic-release": "semantic-release"
+    "docs": "typedoc --out ./docs ./src"
   },
   "devDependencies": {
     "@types/jest": "^25.1.1",
@@ -60,7 +59,6 @@
     "np": "^6.2.0",
     "prettier": "^1.19.1",
     "rimraf": "^3.0.2",
-    "semantic-release": "^17.0.4",
     "ts-jest": "^25.2.1",
     "ts-node": "^8.7.0",
     "ts-node-dev": "^1.0.0-pre.44",
