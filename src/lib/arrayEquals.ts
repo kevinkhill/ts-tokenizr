@@ -11,6 +11,6 @@ export function arrayEquals(
   }
 
   return a1
-    .map(item => a2.includes(item))
+    .map((item) => a2.includes(item))
     .reduce((a, c) => a && c, true);
 }

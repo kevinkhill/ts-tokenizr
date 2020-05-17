@@ -18,7 +18,7 @@ export class State {
 
   constructor(stateDef: string) {
     const pieces = stateDef.split(/\s+/g);
-    const states = pieces.filter(p => !p.startsWith("#"));
+    const states = pieces.filter((p) => !p.startsWith("#"));
 
     if (states.length !== 1) {
       throw new Error("exactly one state required");
@@ -26,8 +26,8 @@ export class State {
 
     this.name = states[0];
     this.tags = pieces
-      .filter(piece => piece.startsWith("#"))
-      .map(tag => tag.replace("#", ""));
+      .filter((piece) => piece.startsWith("#"))
+      .map((tag) => tag.replace("#", ""));
   }
 
   toString(): string {
@@ -35,7 +35,7 @@ export class State {
   }
 
   stringifyTags(): string {
-    return this.tags.map(tag => `#${tag}`).join(" ");
+    return this.tags.map((tag) => `#${tag}`).join(" ");
   }
 
   /**

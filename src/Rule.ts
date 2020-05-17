@@ -13,7 +13,7 @@ export class Rule {
   stringify: Record<string, Function> = {};
 
   get states(): Array<string> {
-    return this._states.map(state => state.toString());
+    return this._states.map((state) => state.toString());
   }
 
   get willMatchAnyState(): boolean {
@@ -42,11 +42,11 @@ export class Rule {
   state(query?: string): State | undefined {
     assertIsString(query);
 
-    return this._states.find(state => state.name === query);
+    return this._states.find((state) => state.name === query);
   }
 
   hasState(state: string): boolean {
-    return this._states.filter(s => s.is(state)).length > 0;
+    return this._states.filter((s) => s.is(state)).length > 0;
   }
 
   getState(state: string): State {
@@ -54,11 +54,11 @@ export class Rule {
       throw Error();
     }
 
-    return this._states.find(s => s.is(state)) as State;
+    return this._states.find((s) => s.is(state)) as State;
   }
 
   getStates(): Array<string> {
-    return this._states.map(item => item.name);
+    return this._states.map((item) => item.name);
   }
 
   /**

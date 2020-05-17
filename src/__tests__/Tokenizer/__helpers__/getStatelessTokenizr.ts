@@ -3,7 +3,7 @@ import { Tokenizr } from "../../../Tokenizr";
 export function getStatelessTokenizr(): Tokenizr {
   const tokenizr = new Tokenizr();
 
-  tokenizr.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, ctx => {
+  tokenizr.rule(/[a-zA-Z_][a-zA-Z0-9_]*/, (ctx) => {
     ctx.accept("id");
   });
 
@@ -15,15 +15,15 @@ export function getStatelessTokenizr(): Tokenizr {
     ctx.accept("string", match[1].replace(/\\"/g, '"'));
   });
 
-  tokenizr.rule(/\/\/[^\r\n]*\r?\n/, ctx => {
+  tokenizr.rule(/\/\/[^\r\n]*\r?\n/, (ctx) => {
     ctx.ignore();
   });
 
-  tokenizr.rule(/[ \t\r\n]+/, ctx => {
+  tokenizr.rule(/[ \t\r\n]+/, (ctx) => {
     ctx.ignore();
   });
 
-  tokenizr.rule(/./, ctx => {
+  tokenizr.rule(/./, (ctx) => {
     ctx.accept("char");
   });
 

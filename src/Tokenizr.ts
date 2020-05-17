@@ -548,7 +548,7 @@ export class Tokenizr {
       if (this.config.debug) {
         const e = excerpt(this._input, this._pos);
         const tags = Object.keys(this._tag)
-          .map(tag => `#${tag}`)
+          .map((tag) => `#${tag}`)
           .join(" ");
 
         this._log(
@@ -596,7 +596,7 @@ export class Tokenizr {
 
           if (matchedState.isTagged) {
             const tags = matchedState.filterTags(
-              tag => !this._tag[tag]
+              (tag) => !this._tag[tag]
             );
 
             if (tags.length > 0) {

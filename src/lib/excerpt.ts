@@ -3,10 +3,7 @@ import { Excerpt } from "../types";
 /* eslint-disable no-control-regex */
 
 function hex(ch: string): string {
-  return ch
-    .charCodeAt(0)
-    .toString(16)
-    .toUpperCase();
+  return ch.charCodeAt(0).toString(16).toUpperCase();
 }
 
 function extract(txt: string, pos: number, len: number): string {
@@ -18,10 +15,10 @@ function extract(txt: string, pos: number, len: number): string {
     .replace(/\n/g, "\\n")
     .replace(/\f/g, "\\f")
     .replace(/\r/g, "\\r")
-    .replace(/[\x00-\x07\x0B\x0E\x0F]/g, ch => "\\x0" + hex(ch))
-    .replace(/[\x10-\x1F\x80-\xFF]/g, ch => "\\x" + hex(ch))
-    .replace(/[\u0100-\u0FFF]/g, ch => "\\u0" + hex(ch))
-    .replace(/[\u1000-\uFFFF]/g, ch => "\\u" + hex(ch));
+    .replace(/[\x00-\x07\x0B\x0E\x0F]/g, (ch) => "\\x0" + hex(ch))
+    .replace(/[\x10-\x1F\x80-\xFF]/g, (ch) => "\\x" + hex(ch))
+    .replace(/[\u0100-\u0FFF]/g, (ch) => "\\u0" + hex(ch))
+    .replace(/[\u1000-\uFFFF]/g, (ch) => "\\u" + hex(ch));
 }
 /**
  * Create a source excerpt

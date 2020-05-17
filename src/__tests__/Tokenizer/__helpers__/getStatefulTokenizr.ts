@@ -3,7 +3,7 @@ import { Tokenizr } from "../../../Tokenizr";
 export function getStatefulTokenizr(): Tokenizr {
   const tokenizr = new Tokenizr();
 
-  tokenizr.rule("default", /[a-zA-Z]+/, ctx => {
+  tokenizr.rule("default", /[a-zA-Z]+/, (ctx) => {
     ctx.accept("symbol");
   });
 
@@ -15,7 +15,7 @@ export function getStatefulTokenizr(): Tokenizr {
     ctx.accept("string", match[1].replace(/\\"/g, '"'));
   });
 
-  tokenizr.rule("default", /\/\*/, ctx => {
+  tokenizr.rule("default", /\/\*/, (ctx) => {
     ctx.push("comment");
     ctx.tag("bar");
     ctx.ignore();
@@ -25,17 +25,17 @@ export function getStatefulTokenizr(): Tokenizr {
     throw new Error("should never enter");
   });
 
-  tokenizr.rule("comment #bar", /\*\//, ctx => {
+  tokenizr.rule("comment #bar", /\*\//, (ctx) => {
     ctx.untag("bar");
     ctx.pop();
     ctx.ignore();
   });
 
-  tokenizr.rule("comment #bar", /./, ctx => {
+  tokenizr.rule("comment #bar", /./, (ctx) => {
     ctx.ignore();
   });
 
-  tokenizr.rule("default", /\s*,\s*/, ctx => {
+  tokenizr.rule("default", /\s*,\s*/, (ctx) => {
     ctx.ignore();
   });
 
