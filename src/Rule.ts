@@ -10,7 +10,7 @@ export class Rule {
   _states: Array<State> = [];
   // _tags: Array<string> = [];
 
-  stringify: Record<string, Function> = {};
+  stringify: Record<string, CallableFunction> = {};
 
   get states(): Array<string> {
     return this._states.map(state => state.toString());

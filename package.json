@@ -9,7 +9,10 @@
     "lexer",
     "tokenizer"
   ],
-  "main": "src/index.ts",
+  "source": "src/ts-tokenizr.js",
+  "main": "dist/ts-tokenizr.js",
+  "module": "dist/ts-tokenizr.module.js",
+  "unpkg": "dist/ts-tokenizr.umd.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/kevinkhill/ts-tokenizr.git"
@@ -30,21 +33,23 @@
   "homepage": "https://github.com/kevinkhill/ts-tokenizr",
   "bugs": "https://github.com/kevinkhill/ts-tokenizr/issues",
   "scripts": {
+    "build": "microbundle",
+    "dev": "microbundle watch",
     "demo": "tsnd ./demo/sample.ts",
     "demo:dev": "tsnd --respawn ./demo/sample.ts",
     "test": "jest",
-    "dev": "yarn test --watch --runInBand",
+    "tdd": "yarn test --runInBand --watch ",
     "lint": "eslint \"./src/**/*.ts\"",
     "docs": "typedoc --out ./docs ./src"
   },
   "devDependencies": {
     "@types/jest": "^25.1.1",
     "@types/node": "^13.9.2",
-    "@typescript-eslint/eslint-plugin": "^2.7.0",
-    "@typescript-eslint/parser": "^2.20.0",
-    "eslint": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
+    "eslint": "^7.7.0",
     "eslint-config-node": "^4.0.0",
-    "eslint-config-prettier": "^6.5.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-import-resolver-typescript": "^2.0.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jest": "^23.1.1",
@@ -56,14 +61,12 @@
     "husky": "^4.2.1",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
-    "np": "^6.2.0",
-    "prettier": "^1.19.1",
-    "rimraf": "^3.0.2",
+    "prettier": "^2.1.1",
     "ts-jest": "^25.2.1",
     "ts-node": "^8.7.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typedoc": "^0.16.11",
-    "typescript": "^3.8.3"
+    "typescript": "^4.0.2"
   },
   "lint-staged": {
     "./src/**/*.ts": "eslint --cache --fix"
