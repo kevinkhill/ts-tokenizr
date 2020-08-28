@@ -37,9 +37,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           registry-url: "https://npm.pkg.github.com"
-          # Defaults to the user or organization that owns the workflow file
-          scope: "@kevinkhill"
       # Publish to GitHub Packages
-      - run: npm publish
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
