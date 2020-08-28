@@ -1,2 +1,14 @@
-node_modules
-coverage
+node_modules/
+.github/
+coverage/
+demo/
+src/
+
+.babelrc
+.editorconfig
+.eslintrc.js
+.gitignore
+.prettierrc
+jest.config.json
+tsconfig.json
+yarn.lock
