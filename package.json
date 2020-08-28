@@ -9,7 +9,7 @@
     "lexer",
     "tokenizer"
   ],
-  "source": "src/ts-tokenizr.js",
+  "source": "src/index.ts",
   "main": "dist/ts-tokenizr.js",
   "module": "dist/ts-tokenizr.module.js",
   "unpkg": "dist/ts-tokenizr.umd.js",
@@ -42,6 +42,9 @@
     "lint": "eslint \"./src/**/*.ts\"",
     "docs": "typedoc --out ./docs ./src"
   },
+  "peerDependencies": {
+    "assert": "*"
+  },
   "devDependencies": {
     "@types/jest": "^25.1.1",
     "@types/node": "^13.9.2",
@@ -61,6 +64,7 @@
     "husky": "^4.2.1",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
+    "microbundle": "^0.12.3",
     "prettier": "^2.1.1",
     "ts-jest": "^25.2.1",
     "ts-node": "^8.7.0",
