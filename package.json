@@ -1,7 +1,8 @@
 {
-  "name": "ts-tokenizr",
+  "name": "@kevinkhill/ts-tokenizr",
   "version": "1.0.0",
   "description": "String Tokenization Library for TypeScript",
+  "private": false,
   "keywords": [
     "string",
     "token",
