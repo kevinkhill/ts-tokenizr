@@ -30,7 +30,13 @@ jobs:
           registry-url: "https://npm.pkg.github.com"
       - name: Install Modules
         run: yarn install
-      - name: Publish to Github
-        run: yarn publish
+      - run: yarn pack --filename=package.tgz
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.YARN_TOKEN }}
+      - uses: actions/setup-node@v1
+        with:
+          registry-url: "https://npm.pkg.github.com"
+      - run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
