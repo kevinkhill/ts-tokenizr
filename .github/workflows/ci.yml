@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+
+defaults:
+  runs-on: ubuntu-latest
+
+jobs:
+  run_tests:
+    name: Run Tests
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+      - name: Install Modules
+        run: yarn install
+      - name: Run Tests
+        run: yarn test
+
+  publish:
+    name: Publish to Github Packages
+    needs: run_tests
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+          registry-url: "https://npm.pkg.github.com"
+      - name: Install Modules
+        run: yarn install
+      - name: Publish to Github
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
