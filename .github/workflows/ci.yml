@@ -5,11 +5,11 @@ on:
     branches: [master]
 
 defaults:
-  runs-on: ubuntu-latest
 
 jobs:
   run_tests:
     name: Run Tests
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -22,6 +22,7 @@ jobs:
 
   publish:
     name: Publish to Github Packages
+    runs-on: ubuntu-latest
     needs: run_tests
     steps:
       - uses: actions/checkout@v2
