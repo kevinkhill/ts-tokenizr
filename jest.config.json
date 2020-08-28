@@ -1,0 +1,9 @@
+{
+  "rootDir": ".",
+  "preset": "ts-jest",
+  "testPathIgnorePatterns": [
+    "/node_modules/",
+    "/demo/",
+    "__helpers__/"
+  ]
+}
