@@ -4,8 +4,6 @@ on:
   push:
     branches: [master]
 
-defaults:
-
 jobs:
   run_tests:
     name: Run Tests
