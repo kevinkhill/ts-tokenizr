@@ -86,7 +86,6 @@ module.exports = {
     "@typescript-eslint/no-object-literal-type-assertion": "off",
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/ban-types": "error",
-    "@typescript-eslint/ban-ts-ignore": "error",
     "@typescript-eslint/prefer-includes": "error",
     "@typescript-eslint/prefer-regexp-exec": "error",
     "@typescript-eslint/no-inferrable-types": "error",
@@ -95,7 +94,6 @@ module.exports = {
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "@typescript-eslint/prefer-string-starts-ends-with": "error",
     "@typescript-eslint/array-type": ["error", { default: "generic" }],
-    "@typescript-eslint/explicit-function-return-type": "error",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {

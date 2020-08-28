@@ -1,12 +1,11 @@
 import { AssertionError } from "assert";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export function isRegExp(o: any): o is RegExp {
+export function isRegExp(o: unknown): o is RegExp {
   return typeof (o as RegExp).compile !== "undefined";
 }
 
 export function assertIsString(
-  input: any,
+  input: unknown,
   error?: string
 ): asserts input is string {
   if (typeof input !== "string") {
