@@ -38,7 +38,7 @@ export interface DepthError {
 
 export interface TaggedState {
   state: string;
-  tags: Array<string>;
+  tags: string[];
 }
 
 // export interface TaggedState {
@@ -55,7 +55,7 @@ export interface Excerpt {
 }
 
 export interface MatchResult {
-  result: Array<string>;
+  result: string[];
 }
 
 export type NoMatch = MatchResult & {

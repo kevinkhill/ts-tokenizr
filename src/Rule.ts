@@ -1,5 +1,5 @@
 import { assertIsString } from "./lib/guards";
-import { MatchResult } from "./MatchResult";
+import { MatchResult } from "./lib/MatchResult";
 import { State } from "./State";
 import { Action } from "./types";
 
@@ -7,12 +7,12 @@ export class Rule {
   _action!: Action;
   _name = "unknown";
   _pattern!: RegExp;
-  _states: Array<State> = [];
+  _states: State[] = [];
   // _tags: Array<string> = [];
 
   stringify: Record<string, CallableFunction> = {};
 
-  get states(): Array<string> {
+  get states(): string[] {
     return this._states.map(state => state.toString());
   }
 
@@ -57,7 +57,7 @@ export class Rule {
     return this._states.find(s => s.is(state)) as State;
   }
 
-  getStates(): Array<string> {
+  getStates(): string[] {
     return this._states.map(item => item.name);
   }
 

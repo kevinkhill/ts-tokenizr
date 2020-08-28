@@ -1,4 +1,4 @@
-import { excerpt } from "./lib/excerpt";
+import { excerpt } from "./excerpt";
 
 export class ParsingError extends Error {
   pos: number;

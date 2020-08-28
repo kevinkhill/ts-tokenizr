@@ -10,7 +10,7 @@ export class State {
   }
 
   name = "default";
-  tags: Array<string> = [];
+  tags: string[] = [];
 
   get isTagged(): boolean {
     return this.tags.length > 0;
@@ -54,7 +54,7 @@ export class State {
     );
   }
 
-  filterTags(cb: (tag: string) => boolean): Array<string> {
+  filterTags(cb: (tag: string) => boolean): string[] {
     return this.tags.filter(cb);
   }
 

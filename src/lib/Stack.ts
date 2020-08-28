@@ -7,7 +7,7 @@ export class Stack<T> {
     return stack;
   }
 
-  protected elements: Array<T> = [];
+  protected elements: T[] = [];
 
   get length(): number {
     return this.elements.length;

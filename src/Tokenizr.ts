@@ -1,7 +1,7 @@
 import { ActionContext } from "./ActionContext";
 import { assertIsString, excerpt, isRegExp } from "./lib";
+import { ParsingError } from "./lib/ParsingError";
 import { StateStack } from "./lib/StateStack";
-import { ParsingError } from "./ParsingError";
 import { Rule } from "./Rule";
 import { Token } from "./Token";
 import {
@@ -27,8 +27,8 @@ export class Tokenizr {
   _eof = false;
   _stopped = false;
   _ctx: ActionContext;
-  _rules: Array<Rule> = [];
-  _pending: Array<Token> = [];
+  _rules: Rule[] = [];
+  _pending: Token[] = [];
   _after: Action | null = null;
   _before: Action | null = null;
   _finish: FinishAction | null = null;
@@ -36,7 +36,7 @@ export class Tokenizr {
   _state: StateStack;
   _tag: Tags = {};
   // _state: Array<string> = ["default"];
-  _transaction: Array<Array<Token>> = [];
+  _transaction: Token[][] = [];
 
   constructor(config?: Partial<TokenizrConfig>) {
     this.config = { ...Tokenizr.defaults, ...config };
@@ -313,8 +313,8 @@ export class Tokenizr {
   /**
    * Determine and return all tokens as an Array
    */
-  tokens(): Array<Token> {
-    const result: Array<Token> = [];
+  tokens(): Token[] {
+    const result: Token[] = [];
 
     let token;
 
@@ -337,7 +337,7 @@ export class Tokenizr {
   /**
    * Sugar method for setting the input and parsing for tokens in one method.
    */
-  tokenize(contents: string): Array<Token> {
+  tokenize(contents: string): Token[] {
     this.input(contents);
 
     return this.tokens();
@@ -489,10 +489,10 @@ export class Tokenizr {
    * Execute multiple alternative callbacks
    */
   alternatives(
-    ...alternatives: Array<(tokenizr: this) => unknown>
+    ...alternatives: ((tokenizr: this) => unknown)[]
   ): unknown {
     let result: unknown = null;
-    let depths: Array<DepthError> = [];
+    let depths: DepthError[] = [];
 
     for (let i = 0; i < alternatives.length; i++) {
       try {

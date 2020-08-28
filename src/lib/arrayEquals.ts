@@ -1,7 +1,4 @@
-export function arrayEquals(
-  a1: Array<unknown>,
-  a2: Array<unknown>
-): boolean {
+export function arrayEquals(a1: unknown[], a2: unknown[]): boolean {
   if (a1 === a2) {
     return true;
   }

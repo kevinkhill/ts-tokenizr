@@ -20,7 +20,7 @@ module.exports = {
   extends: [
     "node",
     "eslint:recommended",
-    'plugin:@typescript-eslint/recommended',
+    "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:import/errors",
     "plugin:import/typescript",
@@ -93,7 +93,7 @@ module.exports = {
     "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/no-unnecessary-type-assertion": "error",
     "@typescript-eslint/prefer-string-starts-ends-with": "error",
-    "@typescript-eslint/array-type": ["error", { default: "generic" }],
+    "@typescript-eslint/array-type": "error",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {
@@ -103,7 +103,7 @@ module.exports = {
     ],
     "@typescript-eslint/no-unused-vars": [
       "error",
-      { argsIgnorePattern: "^_" },
+      { argsIgnorePattern: "^_" }
     ],
 
     //

@@ -1,25 +1,26 @@
 export class MatchResult {
   matched = false;
 
-  input!: string;
-  index!: number;
-  result: Array<string> = [];
+  input?: string;
+  index?: number;
+  result: string[] = [];
 
   length: number;
-  map: Array<string>["map"];
-  find: Array<string>["find"];
-  filter: Array<string>["filter"];
-  includes: Array<string>["includes"];
+  map: string[]["map"];
+  find: string[]["find"];
+  filter: string[]["filter"];
+  includes: string[]["includes"];
 
   constructor(execArray: RegExpExecArray | null) {
     if ((this.matched = execArray !== null)) {
-      this.index = execArray.index;
-      delete execArray.index;
-
       this.input = execArray.input;
-      delete execArray.input;
+      this.index = execArray.index;
 
-      this.result = Array.from(execArray);
+      Object.entries(execArray).forEach(([key, value]) => {
+        if (key !== "groups" && key !== "input" && key !== "index") {
+          this.result.push(value);
+        }
+      });
     }
 
     this.map = this.result.map;
