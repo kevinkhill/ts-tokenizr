@@ -2,6 +2,8 @@
   "name": "ts-tokenizr",
   "version": "1.0.0",
   "description": "String Tokenization Library for TypeScript",
+  "homepage": "https://github.com/kevinkhill/ts-tokenizr",
+  "license": "MIT",
   "keywords": [
     "string",
     "token",
@@ -9,10 +11,13 @@
     "lexer",
     "tokenizer"
   ],
-  "source": "src/index.ts",
-  "main": "dist/ts-tokenizr.js",
-  "module": "dist/ts-tokenizr.module.js",
-  "unpkg": "dist/ts-tokenizr.umd.js",
+  "files": [
+    "build"
+  ],
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "bugs": "https://github.com/kevinkhill/ts-tokenizr/issues",
   "repository": {
     "type": "git",
     "url": "https://github.com/kevinkhill/ts-tokenizr.git"
@@ -29,18 +34,18 @@
       "url": "http://engelschall.com"
     }
   ],
-  "license": "MIT",
-  "homepage": "https://github.com/kevinkhill/ts-tokenizr",
-  "bugs": "https://github.com/kevinkhill/ts-tokenizr/issues",
   "scripts": {
-    "build": "microbundle",
-    "dev": "microbundle watch",
-    "demo": "tsnd ./demo/sample.ts",
+    "clean": "rimraf ./dist/cjs/* ./dist/esm/*",
+    "build": "tsc -b -i tsconfig.json && tsc -b -i tsconfig.cjs.json",
+    "demo": "node -r esm ./demo/sample.js",
     "demo:dev": "tsnd --respawn ./demo/sample.ts",
     "test": "jest",
     "tdd": "yarn test --runInBand --watch ",
     "lint": "eslint \"./src/**/*.ts\"",
     "docs": "typedoc --out ./docs ./src"
+  },
+  "lint-staged": {
+    "./src/**/*.ts": "eslint --cache --fix"
   },
   "peerDependencies": {
     "assert": "*"
@@ -61,18 +66,21 @@
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-simple-import-sort": "^4.0.0",
     "eslint-plugin-tsdoc": "^0.2.3",
+    "esm": "^3.2.25",
     "husky": "^4.2.1",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.8",
     "microbundle": "^0.12.3",
+    "nodemon": "^2.0.6",
     "prettier": "^2.1.1",
+    "rollup": "^2.32.1",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.28.0",
     "ts-jest": "^25.2.1",
     "ts-node": "^8.7.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typedoc": "^0.16.11",
     "typescript": "^4.0.2"
-  },
-  "lint-staged": {
-    "./src/**/*.ts": "eslint --cache --fix"
   }
 }

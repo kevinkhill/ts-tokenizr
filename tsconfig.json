@@ -1,25 +1,32 @@
 {
   "compilerOptions": {
     "strict": true,
-    "baseUrl": "./src",
-    "target": "es2019",
-    "module": "commonjs",
+    "rootDir": "./src",
+    "outDir": "./dist/esm",
+    "target": "es2015",
+    "module": "es2020",
     "lib": [
       "dom",
-      "es2019"
+      "es2020"
     ],
-    "keyofStringsOnly": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strictNullChecks": true,
+    "declaration": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "keyofStringsOnly": true,
+    "strictNullChecks": true,
     "noImplicitReturns": true,
     "noUnusedParameters": true,
+    "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true
   },
+  "include": [
+    "./**/*.ts", "demo/sample.js"
+  ],
   "exclude": [
-    "node_modules"
+    "demo/*.ts",
+    "node_modules/**",
+    "**/__tests__/**/*.ts"
   ]
 }

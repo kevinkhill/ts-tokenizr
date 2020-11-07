@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-import { Tokenizr } from "../src";
+import { Tokenizr } from "../dist/esm";
 
 const lexer = new Tokenizr({
   debug: false
