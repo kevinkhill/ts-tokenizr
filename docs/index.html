@@ -1,0 +1,664 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ts-tokenizr</title>
+	<meta name="description" content="Documentation for ts-tokenizr">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">ts-tokenizr</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>ts-tokenizr</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#ts-tokenizr" id="ts-tokenizr" style="color: inherit; text-decoration: none;">
+					<h1>TS-Tokenizr</h1>
+				</a>
+				<p>Flexible String Tokenization Library for TypeScript</p>
+				<p><img src="https://github.com/kevinkhill/ts-tokenizr/workflows/test/badge.svg" alt=""></p>
+				<p><img src="https://github.com/kevinkhill/ts-tokenizr/workflows/test/badge.svg?branch=develop" alt=""></p>
+				<a href="#inspiration" id="inspiration" style="color: inherit; text-decoration: none;">
+					<h2>Inspiration</h2>
+				</a>
+				<p>I found <a href="https://github.com/rse/tokenizr">this gem of a library</a> after writing my own for a project. It was full of features, and I just didn&#39;t properly know how to implement my own. It worked, but it was... &quot;dumb&quot;. I decided to use it in my project, and along the way, happened to convert the whole thing into TypeScript :laughing:</p>
+				<p>It was a fun exercise and really helped me understand how it worked.</p>
+				<p>Thanks for the great library <a href="https://github.com/rse">rse</a>, <em>cheers!</em> :beers:</p>
+				<a href="#about" id="about" style="color: inherit; text-decoration: none;">
+					<h2>About</h2>
+				</a>
+				<p>Tokenizr is a small TypeScript library, providing powerful and flexible
+					string tokenization functionality. It is intended to be be used as
+					the underlying &quot;lexical scanner&quot; in a Recursive Descent based &quot;syntax
+					parser&quot;, but can be used for other parsing purposes, too. Its distinct
+				features are:</p>
+				<ul>
+					<li><p><strong>Efficient Iteration</strong>:<br/>
+						It iterates over the input character string in a read-only and copy-less fashion.</p>
+					</li>
+					<li><p><strong>Stacked States</strong>:<br/>
+							Its tokenization is based on stacked states for determining rules which can be applied.
+						Each rule can be enabled for one or more particular states only.</p>
+					</li>
+					<li><p><strong>Regular Expression Matching</strong>:<br/>
+						Its tokenization is based on powerful Regular Expressions for matching the input string.</p>
+					</li>
+					<li><p><strong>Match Repeating</strong>:<br/>
+							Rule actions can change the state and then force the repeating of
+						the matching process from scratch at the current input position.</p>
+					</li>
+					<li><p><strong>Match Rejecting</strong>:<br/>
+							Rule actions can reject their matching at the current input position
+						and let subsequent rules to still match.</p>
+					</li>
+					<li><p><strong>Match Ignoring</strong>:<br/>
+							Rule actions can force the matched input to be ignored (without
+						generating a token at all).</p>
+					</li>
+					<li><p><strong>Match Accepting</strong>:<br/>
+						Rule actions can accept the matched input and provide one <em>or even more</em> resulting tokens.</p>
+					</li>
+					<li><p><strong>Shared Context Data</strong>:<br/>
+							Rule actions (during tokenization) can optionally store and retrieve arbitrary
+						values to/from their tokenization context to share data between rules.</p>
+					</li>
+					<li><p><strong>Token Text and Value</strong>:<br/>
+							Tokens provide information about their matched input text and can provide
+						a different corresponding (pre-parsed) value, too.</p>
+					</li>
+					<li><p><strong>Debug Mode</strong>:<br/>
+							The tokenization process can be debugged through optional detailed
+						logging of the internal processing.</p>
+					</li>
+					<li><p><strong>Nestable Transactions</strong>:<br/>
+							The tokenization can be split into distinct (and nestable)
+							transactions which can be committed or rolled back. This way the
+							tokenization can be incrementally stepped back and this way support
+						the attempt of parsing alternatives.</p>
+					</li>
+					<li><p><strong>Token Look-Ahead</strong>:<br/>
+							The forthcoming tokens can be inspected, to support alternative decisions
+						from within the parser, based on look-ahead tokens.</p>
+					</li>
+				</ul>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<a href="#node-environments-with-npm-package-manager" id="node-environments-with-npm-package-manager" style="color: inherit; text-decoration: none;">
+					<h4>Node environments (with NPM package manager):</h4>
+				</a>
+				<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> npm install ts-tokenizr</span></code></pre>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Suppose we have a configuration file <code>sample.cfg</code>:</p>
+				<pre><code>foo {
+    baz = <span class="hljs-number">1</span> <span class="hljs-comment">// sample comment</span>
+    bar {
+        quux = <span class="hljs-number">42</span>
+        hello = <span class="hljs-string">&quot;hello <span class="hljs-subst">\&quot;</span>world<span class="hljs-subst">\&quot;</span>!&quot;</span>
+    }
+    quux = <span class="hljs-number">7</span>
+}</code></pre>
+				<p>Then we can write a lexical scanner in ECMAScript 6 (under Node.js) for the tokens like this:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">import</span> fs       <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;fs&quot;</span>
+<span class="hljs-keyword">import</span> Tokenizr <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;ts-tokenizr&quot;</span>
+
+<span class="hljs-keyword">let</span> lexer = <span class="hljs-keyword">new</span> Tokenizr({
+  <span class="hljs-attr">debug</span>: <span class="hljs-literal">true</span>
+})
+
+lexer.rule(<span class="hljs-regexp">/[a-zA-Z_][a-zA-Z0-9_]*/</span>, <span class="hljs-function">(<span class="hljs-params">ctx, match</span>) =&gt;</span> {
+    ctx.accept(<span class="hljs-string">&quot;id&quot;</span>)
+})
+lexer.rule(<span class="hljs-regexp">/[+-]?[0-9]+/</span>, <span class="hljs-function">(<span class="hljs-params">ctx, match</span>) =&gt;</span> {
+    ctx.accept(<span class="hljs-string">&quot;number&quot;</span>, <span class="hljs-built_in">parseInt</span>(match[<span class="hljs-number">0</span>]))
+})
+lexer.rule(<span class="hljs-regexp">/&quot;((?:\\&quot;|[^\r\n])*)&quot;/</span>, <span class="hljs-function">(<span class="hljs-params">ctx, match</span>) =&gt;</span> {
+    ctx.accept(<span class="hljs-string">&quot;string&quot;</span>, match[<span class="hljs-number">1</span>].replace(<span class="hljs-regexp">/\\&quot;/g</span>, <span class="hljs-string">&quot;\&quot;&quot;</span>))
+})
+lexer.rule(<span class="hljs-regexp">/\/\/[^\r\n]*\r?\n/</span>, <span class="hljs-function">(<span class="hljs-params">ctx, match</span>) =&gt;</span> {
+    ctx.ignore()
+})
+lexer.rule(<span class="hljs-regexp">/[ \t\r\n]+/</span>, <span class="hljs-function">(<span class="hljs-params">ctx, match</span>) =&gt;</span> {
+    ctx.ignore()
+})
+lexer.rule(<span class="hljs-regexp">/./</span>, <span class="hljs-function">(<span class="hljs-params">ctx, match</span>) =&gt;</span> {
+    ctx.accept(<span class="hljs-string">&quot;char&quot;</span>)
+})
+
+<span class="hljs-keyword">let</span> cfg = fs.readFileSync(<span class="hljs-string">&quot;sample.cfg&quot;</span>, <span class="hljs-string">&quot;utf8&quot;</span>)
+
+lexer.input(cfg)
+lexer.tokens().forEach(<span class="hljs-function">(<span class="hljs-params">token</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(token.toString())
+})</code></pre>
+				<p>The output of running this sample program is:</p>
+				<pre><code>&lt;<span class="hljs-attr">type:</span> id, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;foo&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">0</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">1</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;{&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;{&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">4</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">5</span>&gt;
+&lt;<span class="hljs-attr">type:</span> id, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;baz&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;baz&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">10</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">2</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">5</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">14</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">2</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">9</span>&gt;
+&lt;<span class="hljs-attr">type:</span> number, <span class="hljs-attr">value:</span> <span class="hljs-number">1</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;1&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">16</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">2</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">11</span>&gt;
+&lt;<span class="hljs-attr">type:</span> id, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;bar&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;bar&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">40</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">3</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">5</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;{&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;{&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">44</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">3</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">9</span>&gt;
+&lt;<span class="hljs-attr">type:</span> id, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;quux&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;quux&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">54</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">4</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">9</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">59</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">4</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">14</span>&gt;
+&lt;<span class="hljs-attr">type:</span> number, <span class="hljs-attr">value:</span> <span class="hljs-number">42</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;42&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">61</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">4</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">16</span>&gt;
+&lt;<span class="hljs-attr">type:</span> id, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;hello&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">72</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">5</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">9</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">78</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">5</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">15</span>&gt;
+&lt;<span class="hljs-attr">type:</span> string, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;hello \&quot;world\&quot;!&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;\&quot;hello \\\&quot;world\\\&quot;!\&quot;&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">80</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">5</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">17</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;}&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;}&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">103</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">6</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">5</span>&gt;
+&lt;<span class="hljs-attr">type:</span> id, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;quux&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;quux&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">109</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">7</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">5</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;=&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">114</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">7</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">10</span>&gt;
+&lt;<span class="hljs-attr">type:</span> number, <span class="hljs-attr">value:</span> <span class="hljs-number">7</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;7&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">116</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">7</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">12</span>&gt;
+&lt;<span class="hljs-attr">type:</span> <span class="hljs-keyword">char</span>, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;}&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;}&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">118</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">8</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">1</span>&gt;
+&lt;<span class="hljs-attr">type:</span> EOF, <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-attr">text:</span> <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-attr">pos:</span> <span class="hljs-number">122</span>, <span class="hljs-attr">line:</span> <span class="hljs-number">9</span>, <span class="hljs-attr">column:</span> <span class="hljs-number">1</span>&gt;</code></pre>
+				<p>If you want to combine multiple single-char plaintext tokens into
+				a multi-char plaintext token, you can use the following code fragment:</p>
+				<pre><code>let plaintext = <span class="hljs-string">&quot;&quot;</span>
+lexer.before(<span class="hljs-function"><span class="hljs-params">(ctx, match, rule)</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (rule.name !== <span class="hljs-string">&quot;plaintext&quot;</span> &amp;&amp; plaintext !== <span class="hljs-string">&quot;&quot;</span>) {
+        ctx.accept(<span class="hljs-string">&quot;plaintext&quot;</span>, plaintext)
+        plaintext = <span class="hljs-string">&quot;&quot;</span>
+    }
+})
+lexer.rule(<span class="hljs-regexp">/./</span>, <span class="hljs-function"><span class="hljs-params">(ctx, match)</span> =&gt;</span> {
+    plaintext += match[<span class="hljs-number">0</span>]
+    ctx.ignore()
+}, <span class="hljs-string">&quot;plaintext&quot;</span>)
+lexer.finish(<span class="hljs-function"><span class="hljs-params">(ctx)</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (plaintext !== <span class="hljs-string">&quot;&quot;</span>)
+        ctx.accept(<span class="hljs-string">&quot;plaintext&quot;</span>, plaintext)
+})</code></pre>
+				<p>With the additional help of an Abstract Syntax Tree (AST) library like
+					<a href="https://github.com/rse/asty">ASTy</a> and a query library like <a href="https://github.com/rse/astq">ASTq</a>
+					you can <a href="https://github.com/rse/parsing-techniques/blob/master/cfg2kv-3-ls-rdp-ast/cfg2kv.js">write powerful Recursive Descent based parsers</a>
+				which parse such a token stream into an AST and then query and process the AST.</p>
+				<a href="#application-programming-interface-api" id="application-programming-interface-api" style="color: inherit; text-decoration: none;">
+					<h2>Application Programming Interface (API)</h2>
+				</a>
+				<a href="#class-tokenizr" id="class-tokenizr" style="color: inherit; text-decoration: none;">
+					<h3>Class <code>Tokenizr</code></h3>
+				</a>
+				<p>This is the main API class for establishing a lexical scanner.</p>
+				<ul>
+					<li><p>Constructor: <code>Tokenizr(): Tokenizr</code><br/>
+						Create a new tokenization instance.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#reset(): Tokenizr</code><br/>
+							Reset the tokenization instance to a fresh one by
+						discarding all internal state information.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#debug(enable: Boolean): Tokenizr</code><br/>
+						Enable (or disable) verbose logging for debugging purposes.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#input(input: String): Tokenizr</code><br/>
+							Set the input string to tokenize.
+						This implicitly performs a <code>reset()</code> operation beforehand.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#push(state: String): Tokenizr</code><br/>
+						Push a state onto the state stack.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#pop(): String</code><br/>
+							Pop a state from the state stack.
+						The initial (aka first or lowest) stack value (<code>default</code>) cannot be popped.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#state(state: String): Tokenizr</code><br/>
+							Method: <code>Tokenizr#state(): String</code><br/>
+							Set or get the state on the top of the state stack. Use this to
+							initialy start tokenizing with a custom state. The initial state is
+						named <code>default</code>.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#tag(tag: String): Tokenizr</code><br/>
+						Set a tag. The tag has to be matched by rules.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#tagged(tag: String): Boolean</code><br/>
+						Check whether a particular tag is set.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#untag(tag: String): Tokenizr</code><br/>
+						Unset a particular tag. The tag no longer will be matched by rules.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#before(action: (ctx: ActionContext, match: Array[String], rule: { state: String, pattern: RegExp, action: Function, name: String }) =&gt; Void): Tokenizr</code><br/>
+							Configure a single action which is called directly before any rule
+							action (configured with <code>Tokenizr#rule()</code>) is called. This can be used
+							to execute a common action just before all rule actions. The <code>rule</code>
+							argument is the <code>Tokenizr#rule()</code> information of the particular rule
+						which is executed.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#after(action: (ctx: ActionContext, match: Array[String], rule: { state: String, pattern: RegExp, action: Function, name: String }) =&gt; Void): Tokenizr</code><br/>
+							Configure a single action which is called directly after any rule
+							action (configured with <code>Tokenizr#rule()</code>) is called. This can be used
+							to execute a common action just after all rule actions. The <code>rule</code>
+							argument is the <code>Tokenizr#rule()</code> information of the particular rule
+						which is executed.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#finish(action: (ctx: ActionContext) =&gt; Void): Tokenizr</code><br/>
+							Configure a single action which is called directly before an <code>EOF</code>
+							token is emitted. This can be used to execute a common action just
+						after the last rule action was called.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#rule(state?: String, pattern: RegExp, action: (ctx: ActionContext, match: Array[String]) =&gt; Void): Tokenizr</code><br/>
+							Configure a token matching rule which executes its <code>action</code> in case
+							the current tokenization state is one of the states (and all of the
+							currently set tags) in <code>state</code> (by default the rule matches all states
+							if <code>state</code> is not specified) and the next input characters match
+							against the <code>pattern</code>. The exact syntax of <code>state</code> is
+							<code>&lt;state&gt;[ #&lt;tag&gt; #&lt;tag&gt; ...][, &lt;state&gt;[ #&lt;tag&gt; #&lt;tag&gt; ...], ...]</code>, i.e.,
+							it is one or more comma-separated state matches (OR-combined) and each state
+							match has exactly one state and zero or more space-separated tags
+							(AND-combined). The <code>ctx</code> argument provides a context object for token
+							repeating/rejecting/ignoring/accepting, the <code>match</code> argument is the
+						result of the underlying <code>RegExp#exec</code> call.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#token(): Tokenizr.Token</code><br/>
+							Get the next token from the input. Internally, the
+							current position of the input is matched against the
+							patterns of all rules (in rule configuration order). The first rule
+						action which accepts the matching leads to the token.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#tokens(): Array[Tokenizr.Token]</code><br/>
+							Tokenizes the entire input and returns all the corresponding tokens.
+							This is a convenience method only. Usually one takes just single
+						tokens at a time with <code>Tokenizr#token()</code>.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#skip(next?: Number): Tokenizr</code><br/>
+						Get and discard the <code>next</code> number of following tokens with <code>Tokenizr#token()</code>.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#consume(type: String, value?: String): Tokenizr</code><br/>
+							Match (with <code>Tokenizr.Token#isA</code>) the next token. If it matches
+							<code>type</code> and optionally also <code>value</code>, consume it. If it does not match,
+							throw a <code>Tokenizr.ParsingError</code>. This is the primary function used in
+						Recursive Descent parsers.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#peek(offset?: Number): Tokenizr.Token</code><br/>
+							Peek at the following token at the (0-based) offset without consuming
+							the token. This is the secondary function used in Recursive Descent
+						parsers.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#begin(): Tokenizr</code><br/>
+							Begin a transaction. Until <code>Tokenizr#commit()</code> or
+							<code>Tokenizr#rollback()</code> are called, all consumed tokens will
+							be internally remembered and be either thrown away (on
+							<code>Tokenizr#commit()</code>) or pushed back (on <code>Tokenizr#rollback()</code>). This
+							can be used multiple times and this way supports nested transactions.
+						It is intended to be used for tokenizing alternatives.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#depth(): Number</code><br/>
+							Return the number of already consumed tokens in the currently
+							active transaction. This is useful if multiple alternatives
+							are parsed and in case all failed, to report the error for
+						the most specific one, i.e., the one which consumed most tokens.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#commit(): Tokenizr</code><br/>
+						End a transaction successfully. All consumed tokens are finally gone.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#rollback(): Tokenizr</code><br/>
+							End a transaction unsuccessfully. All consumed tokens are pushed back
+						and can be consumed again.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#alternatives(...alternatives: Array[() =&gt; any]): any</code><br/>
+							Utility method for parsing alternatives. It internally executes the
+							supplied callback functions in sequence, each wrapped into its own
+							transaction. The first one which succeeds (does not throw an exception
+							and returns a value) leads to the successful result. In case all
+							alternatives failed (all throw an exception), the exception of the
+							most-specific alterative (the one with the largest transaction depth)
+							is re-thrown. The <code>this</code> in each callback function points to the
+						<code>Tokenizr</code> object on which <code>alternatives</code> was called.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr#error(message: String): Tokenizr.ParsingError</code><br/>
+							Returns a new instance of <code>Tokenizr.ParsingError</code>, based
+							on the current input character stream position, and with
+						<code>Tokenizr.ParsingError#message</code> set to <code>message</code>.</p>
+					</li>
+				</ul>
+				<a href="#class-tokenizrtoken" id="class-tokenizrtoken" style="color: inherit; text-decoration: none;">
+					<h3>Class <code>Tokenizr.Token</code></h3>
+				</a>
+				<p>This is the class of all returned tokens.</p>
+				<ul>
+					<li><p>Property: <code>Tokenizr.Token#type: String</code><br/>
+						The type of the token as specified on <code>Tokenizr.ActionContext#accept()</code>.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.Token#value: any</code><br/>
+							The value of the token. By default this is the same as
+							<code>Tokenizr.Token#text</code>, but can be any pre-processed value
+						as specified on <code>Tokenizr.ActionContext#accept()</code>.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.Token#text: String</code><br/>
+						The corresponding input text of this token.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.Token#pos: Number</code><br/>
+						The (0-based) position in the input.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.Token#line: Number</code><br/>
+						The (1-based) line number in the input.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.Token#column: Number</code><br/>
+						The (1-based) column number in the input.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.Token#toString(): String</code><br/>
+							Returns a formatted representation of the token,
+						usually for debugging or tracing purposes only.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.Token#isA(type: String, value?: any): String</code><br/>
+							Checks whether token matches against a particular <code>type</code> and optionally
+							a particular <code>value</code>. This is especially used internally by
+						<code>Tokenizr#consume()</code>.</p>
+					</li>
+				</ul>
+				<a href="#class-tokenizrparsingerror" id="class-tokenizrparsingerror" style="color: inherit; text-decoration: none;">
+					<h3>Class <code>Tokenizr.ParsingError</code></h3>
+				</a>
+				<p>This is the class of all thrown exceptions related to parsing.</p>
+				<ul>
+					<li><p>Property: <code>Tokenizr.ParsingError#name: String</code><br/>
+							Always just the string <code>ParsingError</code> to be complaint to
+						the JavaScript <code>Error</code> class specification.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.ParsingError#message: String</code><br/>
+						The particular error message.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.ParsingError#pos: Number</code><br/>
+						The (0-based) position in the input.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.ParsingError#line: Number</code><br/>
+						The (1-based) line number in the input.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.ParsingError#column: Number</code><br/>
+						The (1-based) column number in the input.</p>
+					</li>
+					<li><p>Property: <code>Tokenizr.ParsingError#input: String</code><br/>
+						The total input itself.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ParsingError#toString(): String</code><br/>
+							Returns a formatted representation of the error,
+						usually for convenient error displaying purposes.</p>
+					</li>
+				</ul>
+				<a href="#class-tokenizractioncontext" id="class-tokenizractioncontext" style="color: inherit; text-decoration: none;">
+					<h3>Class <code>Tokenizr.ActionContext</code></h3>
+				</a>
+				<p>This is the class of all rule action contexts.</p>
+				<ul>
+					<li><p>Method: <code>Tokenizr.ActionContext#data(key: String, value?: any): any</code><br/>
+							Store or retrieve any user data (indexed by <code>key</code>) to the action
+						context for sharing data between two or more rules.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ActionContext#info(): { line: number, column: number, pos: number, len: number }</code><br/>
+						Retrieve information about the current matching.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ActionContext#push(state: String): Tokenizr</code><br/>
+							Method: <code>Tokenizr.ActionContext#pop(): String</code><br/>
+							Method: <code>Tokenizr.ActionContext#state(state: String): Tokenizr.ActionContext</code><br/>
+							Method: <code>Tokenizr.ActionContext#state(): String</code><br/>
+							Method: <code>Tokenizr.ActionContext#tag(tag: String): Tokenizr.ActionContext</code><br/>
+							Method: <code>Tokenizr.ActionContext#tagged(tag: String): Boolean</code><br/>
+							Method: <code>Tokenizr.ActionContext#untag(tag: String): Tokenizr.ActionContext</code><br/>
+						Methods just passed-through to the attached <code>Tokenizr</code> object. See above for details.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ActionContext#repeat(): Tokenizr.ActionContext</code><br/>
+							Mark the tokenization process to repeat the matching at the current
+							input position from scratch. You first have to switch to a different
+						state with <code>Tokenizr.ActionContext#state()</code> or this will lead to an endless loop, of course!</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ActionContext#reject(): Tokenizr.ActionContext</code><br/>
+							Mark the current matching to be rejected. The tokenization process
+						will continue matching following rules.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ActionContext#ignore(): Tokenizr.ActionContext</code><br/>
+							Mark the current matching to be just ignored. This is usually
+						used for skipping whitespaces.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ActionContext#accept(type: String, value?: any): Tokenizr.ActionContext</code><br/>
+							Accept the current matching and produce a token of <code>type</code> and
+							optionally with a different <code>value</code> (usually a pre-processed variant
+							of the matched text). This function can be called multiple times to
+						produce one or more distinct tokens in sequence.</p>
+					</li>
+					<li><p>Method: <code>Tokenizr.ActionContext#stop(): Tokenizr.ActionContext</code><br/>
+							Immediately stop entire tokenization. After this the
+						<code>Tokenizr#token()</code> method immediately starts to return <code>null</code>.</p>
+					</li>
+				</ul>
+				<a href="#regexp-flag-support" id="regexp-flag-support" style="color: inherit; text-decoration: none;">
+					<h2>RegExp Flag Support</h2>
+				</a>
+				<p>The <code>pattern</code> passed to <code>Tokenizr.{before,after,rule}()</code> has to be a
+					regular JavaScript <code>RegExp</code> objects. Internally, Tokenizr creates a copy
+					of this object by skipping its <code>g</code> (global) and <code>y</code> (sticky) flags and
+					taking over its <code>m</code> (multiline), <code>s</code> (dotAll), <code>i</code> (ignoreCase), and <code>u</code>
+				(unicode) flags.</p>
+				<a href="#implementation-notice" id="implementation-notice" style="color: inherit; text-decoration: none;">
+					<h2>Implementation Notice</h2>
+				</a>
+				<p>Although Tokenizr is written in ECMAScript 6, it is transpiled to
+					ECMAScript 5 and this way runs in really all(!) current (as of 2015)
+				JavaScript environments, of course.</p>
+				<p>Internally, Tokenizr scans the input string in a read-only fashion
+					by leveraging <code>RegExp</code>&#39;s <code>g</code> flag (global, for ECMAScript &lt;= 5
+					environments) or <code>y</code> flag (sticky, for ECMAScript &gt;= 2015 environments)
+				in combination with <code>RegExp</code>&#39;s <code>lastIndex</code> field.</p>
+				<a href="#alternatives" id="alternatives" style="color: inherit; text-decoration: none;">
+					<h2>Alternatives</h2>
+				</a>
+				<p>The following alternatives are known:</p>
+				<ul>
+					<li><p><a href="https://github.com/no-context/moo">moo</a>:
+							A very powerful tokenizer/lexer. It provides nearly the same
+							functionality than Tokenizr. In addition, it compiles all regular
+							expressions into a single one and hence is one of the fastest
+						tokenizers/lexers.</p>
+					</li>
+					<li><p><a href="https://github.com/sormy/flex-js">flex-js</a>
+							A medium powerful tokenizer/lexer. It provides nearly the same
+						functionality than Tokenizr.</p>
+					</li>
+					<li><p><a href="https://github.com/aaditmshah/lexer">lex</a>:
+							A tokenizer/lexer, modeled after the popular C solution Flex. This
+							small library is similar in spirit, but not as flexible as it does not
+						provide state supports.</p>
+					</li>
+				</ul>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p>Copyright (c) 2015-2020 Dr. Ralf S. Engelschall (<a href="http://engelschall.com/">http://engelschall.com/</a>)</p>
+				<p>Permission is hereby granted, free of charge, to any person obtaining
+					a copy of this software and associated documentation files (the
+					&quot;Software&quot;), to deal in the Software without restriction, including
+					without limitation the rights to use, copy, modify, merge, publish,
+					distribute, sublicense, and/or sell copies of the Software, and to
+					permit persons to whom the Software is furnished to do so, subject to
+				the following conditions:</p>
+				<p>The above copyright notice and this permission notice shall be included
+				in all copies or substantial portions of the Software.</p>
+				<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+					EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+					MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+					IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+					CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+					TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+				SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_actioncontext_.html">&quot;<wbr>Action<wbr>Context&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_rule_.html">&quot;<wbr>Rule&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_state_.html">&quot;<wbr>State&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_token_.html">&quot;<wbr>Token&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_tokenizr_.html">&quot;<wbr>Tokenizr&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___rule_test_.html">&quot;__tests__/<wbr>Rule.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___state_test_.html">&quot;__tests__/<wbr>State.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer___helpers___getsamplefilecontents_.html">&quot;__tests__/<wbr>Tokenizer/__helpers__/get<wbr>Sample<wbr>File<wbr>Contents&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer___helpers___getstatefultokenizr_.html">&quot;__tests__/<wbr>Tokenizer/__helpers__/get<wbr>Stateful<wbr>Tokenizr&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer___helpers___getstatelesstokenizr_.html">&quot;__tests__/<wbr>Tokenizer/__helpers__/get<wbr>Stateless<wbr>Tokenizr&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer___helpers___index_.html">&quot;__tests__/<wbr>Tokenizer/__helpers__/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer_api_test_.html">&quot;__tests__/<wbr>Tokenizer/api.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer_stateful_test_.html">&quot;__tests__/<wbr>Tokenizer/stateful.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer_stateless_test_.html">&quot;__tests__/<wbr>Tokenizer/stateless.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/___tests___tokenizer_tagging_test_.html">&quot;__tests__/<wbr>Tokenizer/tagging.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_matchresult_.html">&quot;lib/<wbr>Match<wbr>Result&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_parsingerror_.html">&quot;lib/<wbr>Parsing<wbr>Error&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_stack_.html">&quot;lib/<wbr>Stack&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_statestack_.html">&quot;lib/<wbr>State<wbr>Stack&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib___tests___matchresult_test_.html">&quot;lib/__tests__/<wbr>Match<wbr>Result.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib___tests___stack_test_.html">&quot;lib/__tests__/<wbr>Stack.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib___tests___statestack_test_.html">&quot;lib/__tests__/<wbr>State<wbr>Stack.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib___tests___arrayequals_test_.html">&quot;lib/__tests__/array<wbr>Equals.test&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_arrayequals_.html">&quot;lib/array<wbr>Equals&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_excerpt_.html">&quot;lib/excerpt&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_guards_.html">&quot;lib/guards&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_lib_index_.html">&quot;lib/index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_types_.html">&quot;types&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
