@@ -12,7 +12,7 @@
     "tokenizer"
   ],
   "files": [
-    "build"
+    "dist"
   ],
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
