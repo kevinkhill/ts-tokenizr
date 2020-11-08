@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
     "strict": true,
-    "rootDir": "./src",
-    "outDir": "./dist/esm",
     "target": "es2015",
-    "module": "es2020",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "lib": [
       "dom",
       "es2020"
@@ -22,10 +21,9 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "./**/*.ts", "demo/sample.js"
+    "./**/*.ts",
   ],
   "exclude": [
-    "demo/*.ts",
     "node_modules/**",
     "**/__tests__/**/*.ts"
   ]
