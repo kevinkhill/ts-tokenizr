@@ -24,6 +24,7 @@
     "./**/*.ts",
   ],
   "exclude": [
+    "demo/*",
     "node_modules/**",
     "**/__tests__/**/*.ts"
   ]

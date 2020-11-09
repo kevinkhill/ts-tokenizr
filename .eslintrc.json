@@ -1,23 +1,23 @@
-module.exports = {
-  root: true,
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 8,
-    sourceType: "module",
-    project: "./tsconfig.eslint.json"
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "project": "./tsconfig.eslint.json"
   },
-  env: {
-    es6: true,
-    node: true
+  "env": {
+    "es6": true,
+    "node": true
   },
-  plugins: [
+  "plugins": [
     "import",
     "prettier",
     "@typescript-eslint",
     "simple-import-sort",
     "eslint-plugin-tsdoc"
   ],
-  extends: [
+  "extends": [
     "node",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -28,19 +28,36 @@ module.exports = {
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended" // KEEP THIS LAST
   ],
-  overrides: [
+  "overrides": [
     {
-      files: ["*/__tests__/**/*.test.ts"],
-      env: {
+      "files": [
+        "demo/*.js"
+      ],
+      "env": {
+      },
+      "extends": [
+      ],
+      "rules": {
+        "import/no-commonjs": "off"
+      }
+    },
+    {
+      "files": [
+        "*/__tests__/**/*.test.ts"
+      ],
+      "env": {
         "jest/globals": true
       },
-      extends: [
+      "extends": [
         "plugin:jest/style",
         "plugin:jest/recommended",
         "plugin:jest-formatting/strict"
       ],
-      plugins: ["jest", "jest-formatting"],
-      rules: {
+      "plugins": [
+        "jest",
+        "jest-formatting"
+      ],
+      "rules": {
         "@typescript-eslint/no-misused-promises": "off",
         "jest/no-disabled-tests": "warn",
         "jest/prefer-to-have-length": "warn",
@@ -50,33 +67,35 @@ module.exports = {
       }
     }
   ],
-  settings: {
+  "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts"]
+      "@typescript-eslint/parser": [
+        ".ts"
+      ]
     },
     "import/resolver": {
-      typescript: {
-        alwaysTryTypes: true
+      "typescript": {
+        "alwaysTryTypes": true
       }
     }
   },
-  rules: {
-    quotes: "off",
+  "rules": {
+    "quotes": "off",
     "sort-imports": "off",
     "no-unused-vars": "off",
-    eqeqeq: ["error", "always"],
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
     "no-param-reassign": "error",
     "no-mixed-operators": "error",
-
     //
     // eslint-plugin-tsdoc
     //
     "tsdoc/syntax": "error",
-
     //
     // @typescript-eslint/eslint-plugin
     //
-
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-use-before-define": "off",
@@ -97,31 +116,26 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {
-        allowExpressions: true,
-        allowTypedFunctionExpressions: true
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
       }
     ],
     "@typescript-eslint/no-unused-vars": [
       "error",
-      { argsIgnorePattern: "^_" }
+      { "argsIgnorePattern": "^_"
+      }
     ],
-
     //
     // eslint-plugin-prettier
     //
-
     "prettier/prettier": "error",
-
     //
     // eslint-plugin-simple-import-sort
     //
-
     "simple-import-sort/sort": "error",
-
     //
     // eslint-plugin-import
     //
-
     "import/named": "off",
     "import/no-named-export": "off",
     "import/no-nodejs-modules": "off",
@@ -138,10 +152,10 @@ module.exports = {
     "import/no-extraneous-dependencies": [
       "error",
       {
-        devDependencies: true,
-        peerDependencies: true,
-        optionalDependencies: false
+        "devDependencies": true,
+        "peerDependencies": true,
+        "optionalDependencies": false
       }
     ]
   }
-};
+}

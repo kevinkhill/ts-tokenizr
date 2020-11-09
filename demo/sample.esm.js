@@ -1,6 +1,6 @@
-const { promises } = require("fs");
-const { join } = require("path");
-const { Tokenizr } = require("../dist/cjs");
+import { promises } from "fs";
+import { join } from "path";
+import { Tokenizr } from "../dist/esm";
 
 const lexer = new Tokenizr({
   debug: false
