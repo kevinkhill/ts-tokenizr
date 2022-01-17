@@ -12,11 +12,9 @@ Flexible String Tokenization Library for TypeScript
 Inspiration
 -----
 
-I found [this gem of a library](https://github.com/rse/tokenizr) after writing my own for a project. It was full of features, and I just didn't properly know how to implement my own. It worked, but it was... "dumb". I decided to use it in my project, and along the way, happened to convert the whole thing into TypeScript :laughing:
+I found [this gem of a library](https://github.com/rse/tokenizr) after writing my own for a project. It was full of features, and I just didn't properly know how to implement my own. Mine worked... but it was... "dumb". I decided to use Tokenizr in my project, and along the way, happened to convert the whole thing into TypeScript :laughing:
 
-It was a fun exercise and really helped me understand how it worked.
-
-Thanks for the great library [rse](https://github.com/rse), *cheers!* :beers:
+It was a fun exercise and really helped me understand how it worked. Thanks for the great library [rse](https://github.com/rse), *cheers!* :beers:
 
 
 About
